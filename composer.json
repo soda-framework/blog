@@ -1,0 +1,24 @@
+{
+  "name": "soda-framework/blog",
+  "description": "Soda Framework: Blog",
+  "authors": [
+    {
+      "name": "Ryan Brereton-Canham",
+      "email": "ryzaar@hotmail.com"
+    },
+    {
+      "name": "Simon Davies",
+      "email": "noodlewitt@gmail.com"
+    }
+  ],
+  "require": {
+    "soda-framework/cms": "^0.4.59",
+    "rutorika/sortable": "3.2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Soda\\Blog\\": "src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
