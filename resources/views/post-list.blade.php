@@ -24,27 +24,29 @@
 @section('content')
     <div class="content-top">
         <div class='row'>
-            <div class="col-md-6">
-                <label for="field_search">Search</label>
-                <form class="input-group" method='GET'>
-                    <input name="search" id="field_search" type="text" class="form-control field_search search" value="{{ old('search') }}"">
+            <form method='GET'>
+                <div class="col-md-6">
+                    <label for="field_search">Search</label>
+                    <div class="input-group">
+                        <input name="search" id="field_search" type="text" class="form-control field_search search" value="{{ Request::query('search') }}">
 
-                    <span class="input-group-btn">
-                        <button class="btn btn-default"><span class='glyphicon glyphicon-search'></span></button>
-                    </span>
-                </form><!-- /input-group -->
-            </div>
-            <div class="col-md-6">
-                <form method='GET'>
-                    <input type='hidden' name='filter' value='status'/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default"><span class='glyphicon glyphicon-search'></span></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6">
                     <label for="field_filter_value">Status</label>
-                    <select name="filter_value" class="form-control" id="field_filter_value">
-                        <option value="" {{ old('filter_value') === "" ? "selected" : "" }}>All</option>
-                        <option value="1" {{ old('filter_value') === "1" ? "selected" : "" }}>Published</option>
-                        <option value="0" {{ old('filter_value') === "0" ? "selected" : "" }}>Draft</option>
-                    </select>
-                </form>
-            </div>
+                    <div>
+                        <select name="status" class="form-control" id="field_filter_value">
+                            <option value="" {{ Request::query('status') === "" ? "selected" : "" }}>All</option>
+                            <option value="1" {{ Request::query('status') == "1" ? "selected" : "" }}>Published</option>
+                            <option value="0" {{ Request::query('status') == "0" ? "selected" : "" }}>Draft</option>
+                            <option value="2" {{ Request::query('status') == "2" ? "selected" : "" }}>Pending publish</option>
+                        </select>
+                    </div>
+                </div>
+            </form><!-- /input-group -->
         </div>
     </div>
 
@@ -116,7 +118,7 @@
                                             </li>
                                             <li class="divider"></li>
                                             <li class="warning">
-                                                <a data-post-delete="{{ route('soda.cms.blog.delete', $post->id) }}">Delete</a>
+                                                <a data-post-delete="{{ route('soda.cms.blog.delete', $post->id) }}" href="#">Delete</a>
                                             </li><!--v-if-->
                                         </ul>
                                     </div>
@@ -131,7 +133,7 @@
         <div class="content-bottom">
             <div class="clearfix">
                 <div class="pull-left">
-                    {!! $posts->render() !!}
+                    {!! $posts->appends(Request::only('status', 'search'))->render() !!}
                 </div>
                 <div class="pull-right">
                     @include(soda_cms_view_path('partials.buttons.create'), ['url' => route('soda.cms.blog.create')])

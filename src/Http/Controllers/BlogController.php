@@ -2,6 +2,7 @@
 
 namespace Soda\Blog\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Soda\Blog\Models\Post;
@@ -43,6 +44,8 @@ class BlogController
     {
         $sort = $request->input('sort');
         $search = $request->input('search');
+        $status = $request->input('status');
+
         $direction = strtolower($request->input('direction'));
 
         if ($direction != 'asc' && $direction != 'desc') {
@@ -56,7 +59,15 @@ class BlogController
         }
 
         if ($search) {
-            $posts = $posts->whereRaw('MATCH(name,singletags,content) AGAINST (?)', [$search]);
+            $posts = $posts->whereRaw('MATCH(name,singletags,content) AGAINST (? IN NATURAL LANGUAGE MODE)', [$search]);
+        }
+
+        if ($status == '0' || $status == '1') {
+            $posts->where('status', $status);
+        }
+
+        if ($status == '2') {
+            $posts->where('published_at', '>', Carbon::now());
         }
 
         return view('soda-blog::post-list', [
@@ -217,6 +228,6 @@ class BlogController
         $post->tags()->detach();
         $post->delete();
 
-        return redirect()->route('soda.cms.blog.index')->with('success', 'Blog Post Deleted');
+        return redirect()->route('soda.cms.blog.index')->with('success', ucfirst(trans('soda-blog::general.post')) . ' deleted');
     }
 }
