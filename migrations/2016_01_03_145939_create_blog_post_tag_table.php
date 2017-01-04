@@ -14,7 +14,6 @@ class CreateBlogPostTagTable extends Migration {
 	{
 		Schema::create('blog_post_tag', function(Blueprint $table)
 		{
-			$table->increments('id');
 			$table->integer('post_id');
 			$table->integer('tag_id')->unsigned()->index('FK_blog_post_tag_blog_tags');
 			$table->timestamps();

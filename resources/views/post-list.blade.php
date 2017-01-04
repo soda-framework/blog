@@ -3,52 +3,54 @@
 @section('breadcrumb')
     <ol class="breadcrumb">
         <li><a href="{{ route('soda.home') }}">Home</a></li>
-        <li><a href="{{ route('soda.cms.blog.index') }}">{{ ucfirst(trans('soda-blog.blog-singular')) }}</a></li>
-        <li class="active">{{ ucfirst(trans('soda-blog.post-plural')) }}</li>
+        <li><a href="{{ route('soda.cms.blog.index') }}">{{ ucfirst(trans('soda-blog::general.blog')) }}</a></li>
+        <li class="active">{{ ucfirst(trans('soda-blog::general.posts')) }}</li>
     </ol>
 @stop
 
 @section('head.title')
-    <title>{{ ucfirst(trans('soda-blog.blog-singular')) }} {{ ucfirst(trans('soda-blog.post-plural')) }}</title>
+    <title>{{ ucfirst(trans('soda-blog::general.blog')) }} {{ ucfirst(trans('soda-blog::general.posts')) }}</title>
 @endsection
+
+@section('content-heading-button')
+    @include(soda_cms_view_path('partials.buttons.create'), ['url' => route('soda.cms.blog.create')])
+@stop
 
 @include(soda_cms_view_path('partials.heading'), [
     'icon'  => 'fa fa-book',
-    'title' => ucfirst(trans('soda-blog.blog-singular')) . ucfirst(trans('soda-blog.post-plural')),
+    'title' => ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')),
 ])
 
 @section('content')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.css" type="text/css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
     <div class="content-top">
         <div class='row'>
-            <div class="form-group col-md-6">
+            <div class="col-md-6">
+                <label for="field_search">Search</label>
                 <form class="input-group" method='GET'>
-                    {!! Form::label('search', 'Search:', array('class'=>'sr-only')) !!}
-                    {!! Form::input('search', 'search', null, array('placeholder'=>'Search for...', 'class'=>'form-control')) !!}
+                    <input name="search" id="field_search" type="text" class="form-control field_search search" value="{{ old('search') }}"">
 
                     <span class="input-group-btn">
                         <button class="btn btn-default"><span class='glyphicon glyphicon-search'></span></button>
                     </span>
                 </form><!-- /input-group -->
             </div>
-            <div class="form-group col-md-6">
+            <div class="col-md-6">
                 <form method='GET'>
                     <input type='hidden' name='filter' value='status'/>
-                    {!! Form::select('filter_value', [
-                        '' => 'all',
-                        'denied' => 'denied',
-                        'complete' => 'complete',
-                        'pending' => 'pending'
-                    ], @Input::get('filter_value'), array('class'=>'filter form-control')) !!}
+                    <label for="field_filter_value">Status</label>
+                    <select name="filter_value" class="form-control" id="field_filter_value">
+                        <option value="" {{ old('filter_value') === "" ? "selected" : "" }}>All</option>
+                        <option value="1" {{ old('filter_value') === "1" ? "selected" : "" }}>Published</option>
+                        <option value="0" {{ old('filter_value') === "0" ? "selected" : "" }}>Draft</option>
+                    </select>
                 </form>
             </div>
         </div>
     </div>
 
-    <div class="content-block">
-        @if ($posts->count())
-            <table class="table table-striped table-bordered">
+    @if ($posts->count())
+        <div class="content-block full">
+            <table class="table table-striped middle">
                 <thead>
                 <tr>
                         @if(!Input::get('sort'))
@@ -81,132 +83,172 @@
                                 Date Published
                             </a>
                         </th>
-                        <th width="200">Actions</th>
+                        <th width="100" class="text-right">Actions</th>
                 </tr>
                 </thead>
 
-                <tbody class="sortable" data-entityname="bootleg-blog-post">
+                <tbody class="sortable" data-entityname="soda-blog-post">
                 @foreach ($posts as $post)
                     <tr data-itemId="{{ $post->id }}">
                             @if(!Input::get('sort'))
                             <td class="sortable-handle text-center">
-                                <span class="glyphicon glyphicon-menu-hamburger"></span>
+                                <img src="/soda/cms/img/drag-dots.gif" />
                             </td>
                             @endif
-                            <td>{{ $post->name }}</td>
-                            <td>/{{ $blog->slug . $post->slug }}</td>
-                            <td>{{ @$post->published_at ? @$post->published_at->setTimezone('Australia/Sydney')->toDayDateTimeString() : '' }}</td>
                             <td>
-                                <a href="{{ route('soda.cms.blog.edit', $post->id) }}"
-                                   class="btn btn-warning">View {{ ucfirst(trans('soda-blog.post-singular')) }}</a>
-                                <a href="#" class="btn btn-danger post-delete-button" data-toggle="modal"
-                                   data-target="#confirm-delete"
-                                   data-action="{{ route('soda.cms.blog.delete', $post->id) }}">Delete</a>
+                                <span class="{{ $post->status == \Soda\Cms\Support\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span>
+                                <span style="margin-left:5px">{{ $post->name }}</span>
+                            </td>
+                            <td class="text-monospaced" style="font-size:12px">/{{ $blog->slug . $post->slug }}</td>
+                            <td>{{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.blog.publish_timezone'))->toDayDateTimeString() : '' }}</td>
+                            <td>
+                                <div class="option-buttons pull-right">
+                                    <div style="display:inline-block;position:relative;">
+                                        <a href="#" class="btn btn-info option-more" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-v"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="{{ route('soda.cms.blog.edit', $post->id) }}">Edit {{ ucfirst(trans('soda-blog::general.post')) }}</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ URL::to($blog->slug . '/' . trim($post->slug, '/')) }}" target="_blank" data-tree-link>View page</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li class="warning">
+                                                <a data-post-delete="{{ route('soda.cms.blog.delete', $post->id) }}">Delete</a>
+                                            </li><!--v-if-->
+                                        </ul>
+                                    </div>
+                                </div>
                             </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
-            {!! $posts->render() !!}
+        </div>
 
-            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            Confirmation
-                        </div>
-                        <div class="modal-body">
-                            Are you sure you want to delete this item? This cannot be undone.
-                        </div>
-                        <div class="modal-footer">
-                            <form method="POST">
-                                <input name="_token" type="hidden" value="{{ csrf_token() }}">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                <button class="btn btn-danger btn-ok">Delete</button>
-                            </form>
-                        </div>
+        <div class="content-bottom">
+            <div class="clearfix">
+                <div class="pull-left">
+                    {!! $posts->render() !!}
+                </div>
+                <div class="pull-right">
+                    @include(soda_cms_view_path('partials.buttons.create'), ['url' => route('soda.cms.blog.create')])
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirmation
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this item? This cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <form method="POST">
+                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-danger btn-ok">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
-            <script>
-                $(document).on('ready', function () {
-                    $('select.filter').change(function (e) {
-                        e.preventDefault();
-                        $(this).closest('form').submit();
-                    });
+        </div>
+    @else
+        <div class="content-block">
+            There are no {{ trans('soda-blog::general.posts') }} to show
+        </div>
 
-                    $('.post-delete-button').on('click', function () {
-                        $('#confirm-delete form').attr('action', $(this).data('action'));
-                    });
-
-                    var $sortableTable = $('.sortable');
-                    if ($sortableTable.length > 0) {
-                        $sortableTable.sortable({
-                            handle: '.sortable-handle',
-                            axis: 'y',
-                            update: function (a, b) {
-
-                                var entityName = $(this).data('entityname');
-                                var $sorted = b.item;
-
-                                var $previous = $sorted.prev();
-                                var $next = $sorted.next();
-
-                                if ($previous.length > 0) {
-                                    changePosition({
-                                        parentId: $sorted.data('parentid'),
-                                        type: 'moveAfter',
-                                        entityName: entityName,
-                                        id: $sorted.data('itemid'),
-                                        positionEntityId: $previous.data('itemid'),
-                                        '_token': '{{ csrf_token() }}'
-                                    });
-                                } else if ($next.length > 0) {
-                                    changePosition({
-                                        parentId: $sorted.data('parentid'),
-                                        type: 'moveBefore',
-                                        entityName: entityName,
-                                        id: $sorted.data('itemid'),
-                                        positionEntityId: $next.data('itemid'),
-                                        '_token': '{{ csrf_token() }}'
-                                    });
-                                } else {
-                                    console.error('Something went wrong!');
-                                }
-                            },
-                            cursor: "move"
-                        });
-                    }
-                });
-
-                /**
-                 *
-                 * @param type string 'insertAfter' or 'insertBefore'
-                 * @param entityName
-                 * @param id
-                 * @param positionId
-                 */
-                var changePosition = function (requestData) {
-                    $.ajax({
-                        'url': '{{ route('soda.cms.blog.sort') }}',
-                        'type': 'POST',
-                        'data': requestData,
-                        'success': function (data) {
-                            if (data.success) {
-                                console.log('Saved!');
-                            } else {
-                                console.error(data.errors);
-                            }
-                        },
-                        'error': function () {
-                            console.error('Something wrong!');
-                        }
-                    });
-                };
-            </script>
-        @else
-            There are no {{ trans('soda-blog.post-plural') }} to show
-        @endif
-    </div>
+        <div class="content-bottom">
+            @include(soda_cms_view_path('partials.buttons.create'), ['url' => route('soda.cms.blog.create')])
+        </div>
+    @endif
 @endsection
+
+@section('footer.js')
+    @parent
+    <link href="/soda/cms/css/extra.min.css" type="text/css"/>
+    <script src="/soda/cms/js/extra.min.js"></script>
+    <script>
+        $(document).on('ready', function () {
+            $('select.filter').change(function (e) {
+                e.preventDefault();
+                $(this).closest('form').submit();
+            });
+
+            $('[data-post-delete]').on('click', function () {
+                $('#confirm-delete form').attr('action', $(this).data('post-delete'));
+                $('#confirm-delete').modal('show');
+            });
+
+            var $sortableTable = $('.sortable');
+            if ($sortableTable.length > 0) {
+                $sortableTable.sortable({
+                    handle: '.sortable-handle',
+                    axis: 'y',
+                    update: function (a, b) {
+
+                        var entityName = $(this).data('entityname');
+                        var $sorted = b.item;
+
+                        var $previous = $sorted.prev();
+                        var $next = $sorted.next();
+
+                        if ($previous.length > 0) {
+                            changePosition({
+                                parentId: $sorted.data('parentid'),
+                                type: 'moveAfter',
+                                entityName: entityName,
+                                id: $sorted.data('itemid'),
+                                positionEntityId: $previous.data('itemid'),
+                                '_token': '{{ csrf_token() }}'
+                            });
+                        } else if ($next.length > 0) {
+                            changePosition({
+                                parentId: $sorted.data('parentid'),
+                                type: 'moveBefore',
+                                entityName: entityName,
+                                id: $sorted.data('itemid'),
+                                positionEntityId: $next.data('itemid'),
+                                '_token': '{{ csrf_token() }}'
+                            });
+                        } else {
+                            console.error('Something went wrong!');
+                        }
+                    },
+                    cursor: "move"
+                });
+            }
+        });
+
+        /**
+         *
+         * @param type string 'insertAfter' or 'insertBefore'
+         * @param entityName
+         * @param id
+         * @param positionId
+         */
+        var changePosition = function (requestData) {
+            $.ajax({
+                'url': '{{ route('soda.cms.blog.sort') }}',
+                'type': 'POST',
+                'data': requestData,
+                'success': function (data) {
+                    if (data.success) {
+                        console.log('Saved!');
+                    } else {
+                        console.error(data.errors);
+                    }
+                },
+                'error': function () {
+                    console.error('Something wrong!');
+                }
+            });
+        };
+    </script>
+@stop

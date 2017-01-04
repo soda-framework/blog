@@ -10,7 +10,16 @@ class Blog extends Model
 {
     use SoftDeletes, OptionallyInApplicationTrait;
     public $table = 'blog';
-    public $fillable = ['name', 'text', 'slug'];
+    public $fillable = [
+        'name',
+        'slug',
+        'single_view',
+        'list_view',
+        'rss_enabled',
+        'rss_slug',
+        'rss_view',
+        'rss_strip_tags'
+    ];
 
     public function posts()
     {
@@ -19,6 +28,6 @@ class Blog extends Model
 
     public function postDefaultSettings()
     {
-        return $this->hasMany(BlogPostSettingsDefault::class);
+        return $this->hasMany(PostDefaultSetting::class);
     }
 }

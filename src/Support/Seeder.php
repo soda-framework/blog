@@ -22,6 +22,12 @@ class Seeder extends BaseSeeder
             'description'  => 'Authors have access to create, read and edit blog posts.',
         ]);
 
+        $permission_develop_blog = Permission::create([
+            'name'         => 'develop-blog',
+            'display_name' => 'Develop Blog',
+            'description'  => 'Developer blog settings.',
+        ]);
+
         $permission_admin_blog = Permission::create([
             'name'         => 'admin-blog',
             'display_name' => 'Admin Blog',
@@ -31,12 +37,18 @@ class Seeder extends BaseSeeder
         $permission_manage_blog = Permission::create([
             'name'         => 'manage-blog',
             'display_name' => 'Manage Blog',
-            'description'  => 'Create, read and edit blog psots.',
+            'description'  => 'Create, read and edit blog posts.',
         ]);
 
         $role_author->attachPermissions([
             $permission_manage_blog,
         ]);
+
+        $developerRole = Role::whereName('developer')->first();
+
+        if($developerRole) {
+            $developerRole->attachPermissions([$permission_develop_blog]);
+        }
 
         $adminRole = Role::whereName('admin')->first();
 

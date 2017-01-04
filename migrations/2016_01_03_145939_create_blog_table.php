@@ -18,8 +18,12 @@ class CreateBlogTable extends Migration {
 			$table->string('name');
 			$table->string('slug');
 			$table->integer('application_id')->nullable()->unsigned()->index('FK_blog_applications');
-			$table->string('single_view');
-			$table->string('list_view');
+			$table->string('single_view')->default('soda-blog::default.single');
+            $table->string('list_view')->default('soda-blog::default.list');
+            $table->integer('rss_enabled', 1)->unsigned()->default(1);
+            $table->string('rss_slug')->default('rss');
+            $table->string('rss_view')->default('soda-blog::default.rss');
+            $table->integer('rss_strip_tags', 1)->unsigned()->default(1);
 			$table->timestamps();
 			$table->softDeletes();
 		});

@@ -48,37 +48,41 @@ class SodaBlogServiceProvider extends ServiceProvider {
             $blog = app('CurrentBlog');
             view()->share('blog', $blog);
 
-            SodaMenuFacade::menu('sidebar', function ($menu) use ($blog) {
-                $blog_cms_slug = config('soda-blog.cms_slug', 'blog');
+            if($blog->id) {
+                SodaMenuFacade::menu('sidebar', function ($menu) use ($blog) {
+                    $blog_cms_slug = config('soda-blog.cms_slug', 'blog');
 
-                $menu->addItem('Blog', [
-                    'label'     => ucfirst(trans('soda-blog.blog-singular')),
-                    'icon'      => 'fa fa-book',
-                    'isCurrent' => soda_request_is('/'.trim($blog_cms_slug, '/').'*'),
-                ]);
+                    $menu->addItem('Blog', [
+                        'label'     => ucfirst(trans('soda-blog::general.blog')),
+                        'icon'      => 'fa fa-book',
+                        'isCurrent' => soda_request_is(trim($blog_cms_slug, '/').'*'),
+                    ]);
 
-                $menu['Blog']->addChild('Settings', [
-                    'url'         => route('soda.cms.blog.settings'),
-                    'label'       => 'Settings',
-                    'isCurrent'   => soda_request_is('/'.trim($blog_cms_slug, '/').'settings*'),
-                    'permissions' => 'admin-blog',
-                ]);
+                    $menu['Blog']->addChild('Settings', [
+                        'url'         => route('soda.cms.blog.settings'),
+                        'label'       => 'Settings',
+                        'isCurrent'   => soda_request_is(trim($blog_cms_slug, '/').'/settings*'),
+                        'permissions' => 'admin-blog',
+                    ]);
 
-                $menu['Blog']->addChild('Posts', [
-                    'url'         => route('soda.cms.blog.index'),
-                    'label'       => ucfirst(trans('soda-blog.post-plural')),
-                    'isCurrent'   => soda_request_is('/'.trim($blog_cms_slug, '/').'settings*') && !soda_request_is('/'.trim($blog_cms_slug, '/').'settings*') && !soda_request_is('/'.trim($blog_cms_slug, '/').'import*'),
-                    'permissions' => 'manage-blog',
-                ]);
+                    $menu['Blog']->addChild('Posts', [
+                        'url'         => route('soda.cms.blog.index'),
+                        'label'       => ucfirst(trans('soda-blog::general.posts')),
+                        'isCurrent'   => soda_request_is(trim($blog_cms_slug, '/').'*') && !soda_request_is(trim($blog_cms_slug, '/').'/settings*') && !soda_request_is(trim($blog_cms_slug, '/').'/import*'),
+                        'permissions' => 'manage-blog',
+                    ]);
 
-                $menu['Blog']->addChild('Import', [
-                    'url'         => route('soda.cms.blog.import'),
-                    'label'       => 'Import',
-                    'isCurrent'   => soda_request_is('/'.trim($blog_cms_slug, '/').'import*'),
-                    'permissions' => 'manage-blog',
-                ]);
-            });
+                    $menu['Blog']->addChild('Import', [
+                        'url'         => route('soda.cms.blog.import'),
+                        'label'       => 'Import',
+                        'isCurrent'   => soda_request_is(trim($blog_cms_slug, '/').'/import*'),
+                        'permissions' => 'manage-blog',
+                    ]);
+                });
+            }
         }
+
+        app('soda.page')->registerDraftable(Post::class);
 
         parent::boot();
     }

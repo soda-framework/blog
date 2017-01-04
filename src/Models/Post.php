@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Soda\Blog\Models\Traits\BlogSortableTrait;
 use Soda\Cms\Models\Traits\DraftableTrait;
+use Soda\Cms\Models\Traits\SluggableTrait;
 use Soda\Cms\Models\User;
 
 class Post extends Model
 {
-    use SoftDeletes, BlogSortableTrait, DraftableTrait;
+    use SoftDeletes, BlogSortableTrait, DraftableTrait, SluggableTrait;
 
     public $table = 'blog_posts';
     public $fillable = [
@@ -27,6 +28,7 @@ class Post extends Model
     ];
     protected $dates = ['published_at', 'deleted_at'];
     protected static $sortableGroupField = 'blog_id';
+    protected static $publishDateField = 'published_at';
 
     protected static function boot()
     {
@@ -93,12 +95,13 @@ class Post extends Model
             WHERE bpt.post_id <> '.$post->id.'
             AND deleted_at IS NULL
             GROUP BY bpt.post_id, p.name
-            ORDER BY COUNT(post_id)'.($limit ? " LIMIT $limit" : "")));*/
+            ORDER BY COUNT(post_id)'.($limit ? " LIMIT $limit" : "")));
+        */
 
-            $tagsTable = (new Tag)->getTable();
-            $postTable = (new Post)->getTable();
+        $tagsTable = (new Tag)->getTable();
+        $postTable = (new Post)->getTable();
 
-            $related = Tag::select("$tagsTable.post_id", "$postTable.*", DB::raw("COUNT($tagsTable.post_id) as matched_tags"))
+        $related = Tag::select("$tagsTable.post_id", "$postTable.*", DB::raw("COUNT($tagsTable.post_id) as matched_tags"))
             ->join("$tagsTable as otherTags", function ($join) use ($tagsTable, $post) {
                 $join->on("$tagsTable.tag_id", '=', "otherTags.tag_id")
                     ->where('otherTags.post_id', '=', $post->id);
@@ -108,11 +111,20 @@ class Post extends Model
             ->groupBy("$tagsTable.post_id", "$postTable.name")
             ->orderBy("matched_tags");
 
-            if($limit) {
-                $related->take($limit);
-            }
+        if ($limit) {
+            $related->take($limit);
+        }
 
         return $related;
     }
 
+    public function getTitle()
+    {
+        return $this->name;
+    }
+
+    public function getAuthorName()
+    {
+        return isset($this->author) ? $this->author->name : null;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Soda\Blog\Models\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Rutorika\Sortable\SortableTrait as BaseSortableTrait;
@@ -42,7 +43,7 @@ trait BlogSortableTrait
         );
 
         static::addGlobalScope('position', function (Builder $builder) {
-            $sortableFields = (array) config('soda-blog.default_sort');
+            $sortableFields = (array) config('soda.blog.default_sort');
 
             foreach($sortableFields as $field => $direction) {
                 $builder->orderBy($field, $direction);

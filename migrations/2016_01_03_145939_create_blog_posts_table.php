@@ -23,9 +23,9 @@ class CreateBlogPostsTable extends Migration {
 			$table->string('slug');
 			$table->string('singletags');
 			$table->string('featured_image');
-			$table->integer('blog_id')->unsigned();
+			$table->integer('blog_id')->unsigned()->nullable();
 			$table->integer('status')->unsigned();
-			$table->integer('user_id')->unsigned();
+			$table->integer('user_id')->unsigned()->nullable();
             $table->integer('position')->unsigned();
             $table->timestamp('published_at')->nullable();
 			$table->timestamps();
