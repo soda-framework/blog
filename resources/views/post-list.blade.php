@@ -114,7 +114,7 @@
                                                 <a href="{{ route('soda.cms.blog.edit', $post->id) }}">Edit {{ ucfirst(trans('soda-blog::general.post')) }}</a>
                                             </li>
                                             <li>
-                                                <a href="{{ URL::to($blog->slug . '/' . trim($post->slug, '/')) }}" target="_blank" data-tree-link>View page</a>
+                                                <a href="{{ URL::to($blog->slug . '/' . trim($post->slug, '/')) }}" target="_blank" data-tree-link>View {{ ucfirst(trans('soda-blog::general.post')) }}</a>
                                             </li>
                                             <li class="divider"></li>
                                             <li class="warning">

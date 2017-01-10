@@ -26,11 +26,11 @@
     @if($post->id)
         <div class="alert alert-info">
             @if(Carbon\Carbon::now() >= $post->published_at && $post->status == 1)
-                This {{ trans('soda-blog::general.post') }} is live
+                This {{ trans('soda-blog::general.post') }} is live!
             @elseif($post->status == 0)
-                This {{ trans('soda-blog::general.post') }} is in draft mode
+                This {{ trans('soda-blog::general.post') }} is in draft mode.
             @else
-                This {{ trans('soda-blog::general.post') }} will not appear live until the publish date
+                This {{ trans('soda-blog::general.post') }} will not appear live until the publish date.
             @endif
         </div>
     @endif
@@ -100,15 +100,12 @@
                         ],
                     ])->setModel($post) !!}
 
-                    {{--
                     @if(count($settings))
-                        <h2>Extra Settings</h2>
+                        <hr />
                         @foreach($settings as $setting)
-                            {!! SodaForm::field($setting->field) !!}
-                            @include('cms::contents.input_types.'.$setting[0]->field_type, array('setting'=>$setting))
+                            {!! SodaForm::field($setting->field)->setPrefix('setting.'.$setting->field->id) !!}
                         @endforeach
                     @endif
-                    --}}
                 </div>
             </div>
         </div>

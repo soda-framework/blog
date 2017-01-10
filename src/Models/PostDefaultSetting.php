@@ -2,6 +2,7 @@
 namespace Soda\Blog\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Soda\Cms\Models\Field;
 
 class PostDefaultSetting extends Model
 {
@@ -11,5 +12,10 @@ class PostDefaultSetting extends Model
     public function blog()
     {
         return $this->belongsTo(Blog::class);
+    }
+
+    public function field()
+    {
+        return $this->belongsTo(Field::class);
     }
 }
