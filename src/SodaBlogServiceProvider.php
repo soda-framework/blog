@@ -49,7 +49,7 @@ class SodaBlogServiceProvider extends ServiceProvider {
             view()->share('blog', $blog);
 
             if($blog->id) {
-                SodaMenuFacade::menu('sidebar', function ($menu) use ($blog) {
+                app('soda.menu')->menu('sidebar', function ($menu) use ($blog) {
                     $blog_cms_slug = config('soda-blog.cms_slug', 'blog');
 
                     $menu->addItem('Blog', [
@@ -102,7 +102,7 @@ class SodaBlogServiceProvider extends ServiceProvider {
         ]);
 
         $this->app->singleton('CurrentBlog', function(){
-            $application = Soda::getApplication();
+            $application = app('soda')->getApplication();
 
             return $application ? Blog::firstOrNew(['application_id' => $application->id]) : new Blog;
         });
