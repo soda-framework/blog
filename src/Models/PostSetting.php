@@ -3,7 +3,6 @@ namespace Soda\Blog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Soda\Cms\Models\Field;
 
 class PostSetting extends Model
 {
@@ -20,6 +19,6 @@ class PostSetting extends Model
 
     public function field()
     {
-        return $this->belongsTo(Field::class);
+        return $this->belongsTo(resolve_class('soda.field.model'));
     }
 }

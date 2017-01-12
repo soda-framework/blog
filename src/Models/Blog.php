@@ -5,7 +5,6 @@ namespace Soda\Blog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Soda\Cms\Database\Support\Models\Traits\OptionallyBoundToApplication;
-use Soda\Cms\Models\Traits\OptionallyInApplicationTrait;
 
 class Blog extends Model
 {

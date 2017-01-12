@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Soda\Blog\Models\Traits\BlogSortable;
 use Soda\Cms\Database\Support\Models\Traits\Draftable;
 use Soda\Cms\Database\Support\Models\Traits\Sluggable;
-use Soda\Cms\Models\User;
 
 class Post extends Model
 {
@@ -51,7 +50,7 @@ class Post extends Model
 
     public function author()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(resolve_class('soda.user.model'), 'user_id');
     }
 
     public function tags()

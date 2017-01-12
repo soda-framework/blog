@@ -3,10 +3,10 @@
 $blog = app('CurrentBlog');
 
 if($blog->id) {
-    Route::group(['middleware' => ['web', 'soda.main', 'soda.auth']], function () use ($blog) {
+    Route::group(['middleware' => ['web', 'soda.web', 'soda.auth']], function () use ($blog) {
         $blog_cms_slug = config('soda-blog.cms_slug', 'blog');
 
-        Route::group(['prefix' => config('soda.cms.path') . '/' . trim($blog_cms_slug, '/'), 'middleware' => 'soda.main'], function () {
+        Route::group(['prefix' => config('soda.cms.path') . '/' . trim($blog_cms_slug, '/')], function () {
             Route::get('/', 'BlogController@index')->name('soda.cms.blog.index');
             Route::get('create', 'BlogController@create')->name('soda.cms.blog.create');
             Route::get('edit/{id}', 'BlogController@edit')->name('soda.cms.blog.edit');
