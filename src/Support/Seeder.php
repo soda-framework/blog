@@ -3,8 +3,8 @@
 namespace Soda\Blog\Support;
 
 use Illuminate\Database\Seeder as BaseSeeder;
-use Soda\Cms\Models\Permission;
-use Soda\Cms\Models\Role;
+use Soda\Cms\Database\Permissions\Models\Permission;
+use Soda\Cms\Database\Roles\Models\Role;
 
 class Seeder extends BaseSeeder
 {
@@ -16,28 +16,31 @@ class Seeder extends BaseSeeder
      */
     public function run()
     {
-        $role_author = Role::create([
+        $role_author = Role::firstOrCreate([
             'name'         => 'author',
             'display_name' => 'Author',
             'description'  => 'Authors have access to create, read and edit blog posts.',
         ]);
 
-        $permission_develop_blog = Permission::create([
+        $permission_develop_blog = Permission::firstOrCreate([
             'name'         => 'develop-blog',
             'display_name' => 'Develop Blog',
             'description'  => 'Developer blog settings.',
+            'category'     => 'Blog',
         ]);
 
-        $permission_admin_blog = Permission::create([
+        $permission_admin_blog = Permission::firstOrCreate([
             'name'         => 'admin-blog',
             'display_name' => 'Admin Blog',
             'description'  => 'Administrate blog settings.',
+            'category'     => 'Blog',
         ]);
 
-        $permission_manage_blog = Permission::create([
+        $permission_manage_blog = Permission::firstOrCreate([
             'name'         => 'manage-blog',
             'display_name' => 'Manage Blog',
             'description'  => 'Create, read and edit blog posts.',
+            'category'     => 'Blog',
         ]);
 
         $role_author->attachPermissions([
