@@ -19,7 +19,7 @@ use Rutorika\Sortable\SortableTrait as BaseSortableTrait;
  * @method QueryBuilder where($column, $operator = null, $value = null, $boolean = 'and')
  * @method float|int max($column)
  */
-trait BlogSortableTrait
+trait BlogSortable
 {
     use BaseSortableTrait;
 

@@ -82,7 +82,7 @@ class SodaBlogServiceProvider extends ServiceProvider {
             }
         }
 
-        app('soda.page')->registerDraftable(Post::class);
+        app('soda.drafting')->registerDraftable(Post::class);
 
         parent::boot();
     }

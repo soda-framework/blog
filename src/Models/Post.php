@@ -4,14 +4,14 @@ namespace Soda\Blog\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
-use Soda\Blog\Models\Traits\BlogSortableTrait;
-use Soda\Cms\Models\Traits\DraftableTrait;
-use Soda\Cms\Models\Traits\SluggableTrait;
+use Soda\Blog\Models\Traits\BlogSortable;
+use Soda\Cms\Database\Support\Models\Traits\Draftable;
+use Soda\Cms\Database\Support\Models\Traits\Sluggable;
 use Soda\Cms\Models\User;
 
 class Post extends Model
 {
-    use SoftDeletes, BlogSortableTrait, DraftableTrait, SluggableTrait;
+    use SoftDeletes, BlogSortable, Draftable, Sluggable;
 
     public $table = 'blog_posts';
     public $fillable = [
