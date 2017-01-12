@@ -20,10 +20,10 @@ class CreateBlogTable extends Migration {
 			$table->integer('application_id')->nullable()->unsigned()->index('FK_blog_applications');
 			$table->string('single_view')->default('soda-blog::default.single');
             $table->string('list_view')->default('soda-blog::default.list');
-            $table->integer('rss_enabled', 1)->unsigned()->default(1);
+            $table->tinyInteger('rss_enabled')->unsigned()->default(1);
             $table->string('rss_slug')->default('rss');
             $table->string('rss_view')->default('soda-blog::default.rss');
-            $table->integer('rss_strip_tags', 1)->unsigned()->default(1);
+            $table->tinyInteger('rss_strip_tags')->unsigned()->default(1);
 			$table->timestamps();
 			$table->softDeletes();
 		});
