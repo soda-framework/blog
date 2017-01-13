@@ -98,7 +98,7 @@
                             </td>
                             @endif
                             <td>
-                                <span class="{{ $post->status == \Soda\Cms\Support\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span>
+                                <span class="{{ $post->status == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span>
                                 <span style="margin-left:5px">{{ $post->name }}</span>
                             </td>
                             <td class="text-monospaced" style="font-size:12px">/{{ $blog->slug . $post->slug }}</td>

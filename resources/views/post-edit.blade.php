@@ -58,8 +58,8 @@
                     {!! SodaForm::toggle([
                         'name'         => 'Published',
                         'field_name'   => 'status',
-                        'value'        => Soda\Cms\Support\Constants::STATUS_LIVE,
-                        'field_params' => ['checked-value' => Soda\Cms\Support\Constants::STATUS_LIVE, 'unchecked-value' => Soda\Cms\Support\Constants::STATUS_DRAFT],
+                        'value'        => Soda\Cms\Foundation\Constants::STATUS_LIVE,
+                        'field_params' => ['checked-value' => Soda\Cms\Foundation\Constants::STATUS_LIVE, 'unchecked-value' => Soda\Cms\Foundation\Constants::STATUS_DRAFT],
                     ])->setLayout(soda_cms_view_path('partials.inputs.layouts.stacked'))->setModel($post) !!}
 
                     {{-- CONFIGURE TIMEZONE --}}
@@ -76,7 +76,7 @@
             </div>
             <div class="col-lg-9 col-xs-12">
                 <div class="content-block">
-                    {!! SodaForm::fancyupload([
+                    {!! SodaForm::fancy_upload([
                         'name'        => 'Featured image',
                         'field_name'  => 'featured_image',
                     ])->setModel($post) !!}

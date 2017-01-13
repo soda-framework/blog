@@ -36,8 +36,6 @@ if($blog->id) {
             if($blog->rss_enabled == true) {
                 Route::get($blog->rss_slug, 'FrontendController@rss')->name('soda.blog.rss');
             }
-
-            //Route::any('{slug?}', 'FrontendController@showPost')->name('soda.blog.post')->where('slug', '(.*)');
         });
     }
 }

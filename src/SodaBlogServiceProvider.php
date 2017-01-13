@@ -2,6 +2,7 @@
 
 use Soda\Blog\Console\Migrate;
 use Soda\Blog\Console\Seed;
+use Soda\Blog\Http\BlogPostMatcher;
 use Soda\Blog\Models\Post;
 use Soda\Cms\Support\Facades\SodaFacade as Soda;
 use Soda\Blog\Models\Blog;
@@ -79,6 +80,8 @@ class SodaBlogServiceProvider extends ServiceProvider {
                         'permissions' => 'manage-blog',
                     ]);
                 });
+
+                app('soda.request-matcher')->registerMatcher(BlogPostMatcher::class);
             }
         }
 
