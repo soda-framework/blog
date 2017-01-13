@@ -23,10 +23,14 @@ class BlogPostMatcher extends AbstractPageMatcher implements MatcherInterface
     {
         $blogSlug = trim($this->blog->slug, '/');
         $slug = trim($slug, '/');
-        $slug = substr($slug, strlen($blogSlug));
-        $slug = '/' . ltrim($slug, '/');
 
-        $this->matchedBlogPost = $this->blog->posts()->with('settings')->where('slug', $slug)->first();
+        if(starts_with($slug, $blogSlug))
+        {
+            $slug = substr($slug, strlen($blogSlug));
+            $slug = '/' . ltrim($slug, '/');
+
+            $this->matchedBlogPost = $this->blog->posts()->with('settings')->where('slug', $slug)->first();
+        }
 
         return $this->matchedBlogPost;
     }
