@@ -2,8 +2,8 @@
 
 namespace Soda\Blog\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Soda\Blog\Models\Post;
+use Illuminate\Http\Request;
 
 class PostController
 {

@@ -1,4 +1,5 @@
 <?php
+
 return [
     'blog-singular' => 'blog',
     'blog-plural'   => 'blogs',
