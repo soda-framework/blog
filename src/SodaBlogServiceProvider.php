@@ -1,16 +1,17 @@
-<?php namespace Soda\Blog;
+<?php
 
-use Soda\Blog\Console\Migrate;
-use Soda\Blog\Console\Seed;
-use Soda\Blog\Models\Post;
-use Soda\Cms\Support\Facades\SodaFacade as Soda;
+namespace Soda\Blog;
+
 use Soda\Blog\Models\Blog;
-use Soda\Cms\Support\Facades\SodaMenuFacade;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Soda\Blog\Models\Post;
+use Soda\Blog\Console\Seed;
+use Soda\Blog\Console\Migrate;
 use Illuminate\Support\Facades\Route;
+use Soda\Cms\Support\Facades\SodaFacade as Soda;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-class SodaBlogServiceProvider extends ServiceProvider {
-
+class SodaBlogServiceProvider extends ServiceProvider
+{
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -44,11 +45,11 @@ class SodaBlogServiceProvider extends ServiceProvider {
         $this->app->config->set('sortable.entities.soda-blog-post', Post::class);
 
         //we don't want to attach events when runnning artisan commands etc..
-        if (!$this->app->runningInConsole()){
+        if (! $this->app->runningInConsole()) {
             $blog = app('CurrentBlog');
             view()->share('blog', $blog);
 
-            if($blog->id) {
+            if ($blog->id) {
                 app('soda.menu')->menu('sidebar', function ($menu) use ($blog) {
                     $blog_cms_slug = config('soda-blog.cms_slug', 'blog');
 
@@ -68,7 +69,7 @@ class SodaBlogServiceProvider extends ServiceProvider {
                     $menu['Blog']->addChild('Posts', [
                         'url'         => route('soda.cms.blog.index'),
                         'label'       => ucfirst(trans('soda-blog::general.posts')),
-                        'isCurrent'   => soda_request_is(trim($blog_cms_slug, '/').'*') && !soda_request_is(trim($blog_cms_slug, '/').'/settings*') && !soda_request_is(trim($blog_cms_slug, '/').'/import*'),
+                        'isCurrent'   => soda_request_is(trim($blog_cms_slug, '/').'*') && ! soda_request_is(trim($blog_cms_slug, '/').'/settings*') && ! soda_request_is(trim($blog_cms_slug, '/').'/import*'),
                         'permissions' => 'manage-blog',
                     ]);
 
@@ -101,7 +102,7 @@ class SodaBlogServiceProvider extends ServiceProvider {
             Seed::class,
         ]);
 
-        $this->app->singleton('CurrentBlog', function(){
+        $this->app->singleton('CurrentBlog', function () {
             $application = app('soda')->getApplication();
 
             return $application ? Blog::firstOrNew(['application_id' => $application->id]) : new Blog;
@@ -116,7 +117,7 @@ class SodaBlogServiceProvider extends ServiceProvider {
     public function map()
     {
         Route::group(['namespace' => $this->namespace], function ($router) {
-            require(__DIR__.'/../routes/web.php');
+            require __DIR__.'/../routes/web.php';
         });
     }
 
@@ -127,6 +128,5 @@ class SodaBlogServiceProvider extends ServiceProvider {
      */
     public function provides()
     {
-
     }
 }
