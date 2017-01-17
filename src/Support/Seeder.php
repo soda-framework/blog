@@ -2,15 +2,14 @@
 
 namespace Soda\Blog\Support;
 
-use Illuminate\Database\Seeder as BaseSeeder;
-use Soda\Cms\Models\Permission;
 use Soda\Cms\Models\Role;
+use Soda\Cms\Models\Permission;
+use Illuminate\Database\Seeder as BaseSeeder;
 
 class Seeder extends BaseSeeder
 {
-
     /**
-     * Auto generated seed file
+     * Auto generated seed file.
      *
      * @return void
      */
@@ -40,7 +39,7 @@ class Seeder extends BaseSeeder
 
         $adminRole = Role::whereName('admin')->first();
 
-        if($adminRole) {
+        if ($adminRole) {
             $adminRole->attachPermissions([$permission_manage_blog, $permission_admin_blog]);
         }
     }

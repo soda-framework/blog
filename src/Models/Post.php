@@ -1,12 +1,13 @@
 <?php
+
 namespace Soda\Blog\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
-use Soda\Blog\Models\Traits\BlogSortableTrait;
-use Soda\Cms\Models\Traits\DraftableTrait;
 use Soda\Cms\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Soda\Cms\Models\Traits\DraftableTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Soda\Blog\Models\Traits\BlogSortableTrait;
 
 class Post extends Model
 {
@@ -73,8 +74,6 @@ class Post extends Model
         } elseif (count($settings)) {
             return $settings->first()->value;
         }
-
-        return null;
     }
 
     public function getRelated($id = null, $limit = null)
@@ -96,23 +95,22 @@ class Post extends Model
             ORDER BY COUNT(post_id)'.($limit ? " LIMIT $limit" : "")));*/
 
             $tagsTable = (new Tag)->getTable();
-            $postTable = (new Post)->getTable();
+        $postTable = (new self)->getTable();
 
-            $related = Tag::select("$tagsTable.post_id", "$postTable.*", DB::raw("COUNT($tagsTable.post_id) as matched_tags"))
+        $related = Tag::select("$tagsTable.post_id", "$postTable.*", DB::raw("COUNT($tagsTable.post_id) as matched_tags"))
             ->join("$tagsTable as otherTags", function ($join) use ($tagsTable, $post) {
-                $join->on("$tagsTable.tag_id", '=', "otherTags.tag_id")
+                $join->on("$tagsTable.tag_id", '=', 'otherTags.tag_id')
                     ->where('otherTags.post_id', '=', $post->id);
             })
-            ->join(Post::class, "$tagsTable.post_id", "=", "$postTable.id")
-            ->where("$tagsTable.post_id", "!=", $post->id)
+            ->join(self::class, "$tagsTable.post_id", '=', "$postTable.id")
+            ->where("$tagsTable.post_id", '!=', $post->id)
             ->groupBy("$tagsTable.post_id", "$postTable.name")
-            ->orderBy("matched_tags");
+            ->orderBy('matched_tags');
 
-            if($limit) {
-                $related->take($limit);
-            }
+        if ($limit) {
+            $related->take($limit);
+        }
 
         return $related;
     }
-
 }

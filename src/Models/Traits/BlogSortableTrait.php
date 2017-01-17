@@ -44,7 +44,7 @@ trait BlogSortableTrait
         static::addGlobalScope('position', function (Builder $builder) {
             $sortableFields = (array) config('soda-blog.default_sort');
 
-            foreach($sortableFields as $field => $direction) {
+            foreach ($sortableFields as $field => $direction) {
                 $builder->orderBy($field, $direction);
             }
         });
@@ -62,9 +62,11 @@ trait BlogSortableTrait
         $first = $query->first();
 
         // only automatically calculate next position with max+1 when a position has not been set already
-        if (!$nullOnly || $model->$sortableField === null) {
+        if (! $nullOnly || $model->$sortableField === null) {
             $model->setAttribute($sortableField, $query->max($sortableField) + 1);
-            if ($first) $model->move('moveBefore', $first, false);
+            if ($first) {
+                $model->move('moveBefore', $first, false);
+            }
         }
     }
 
@@ -99,9 +101,11 @@ trait BlogSortableTrait
             }
 
             $this->setAttribute($sortableField, $this->getNewPosition($isMoveBefore, $isMoveForward, $newPosition));
-            $entity->setAttribute($sortableField, $this->getNewPosition(!$isMoveBefore, $isMoveForward, $newPosition));
+            $entity->setAttribute($sortableField, $this->getNewPosition(! $isMoveBefore, $isMoveForward, $newPosition));
 
-            if ($save) $this->save();
+            if ($save) {
+                $this->save();
+            }
             $entity->save();
         });
     }
@@ -115,7 +119,7 @@ trait BlogSortableTrait
 
         $sortableGroupField = static::getSortableGroupField();
 
-        if (!is_array($sortableGroupField)) {
+        if (! is_array($sortableGroupField)) {
             $sortableGroupField = [$sortableGroupField];
         }
 
