@@ -1,4 +1,5 @@
 <?php
+
 namespace Soda\Blog\Models;
 
 use Illuminate\Database\Eloquent\Model;
