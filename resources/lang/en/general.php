@@ -1,4 +1,5 @@
 <?php
+
 return [
     'blog'  => 'blog',
     'blogs' => 'blogs',

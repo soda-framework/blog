@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists('blog_slug')) {
+if (! function_exists('blog_slug')) {
     function blog_slug($slug)
     {
         $blog = app('CurrentBlog');
@@ -14,7 +14,7 @@ if (!function_exists('blog_slug')) {
     }
 }
 
-if (!function_exists('atom_url')) {
+if (! function_exists('atom_url')) {
     function atom_url($url)
     {
         $atomId = preg_replace('#^https?://#', '', rtrim($url, '/')); // Remove http
