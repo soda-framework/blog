@@ -2,13 +2,11 @@
 
 namespace Soda\Blog\Http\Controllers;
 
-use Application;
-use AWS;
 use DOMDocument;
+use Soda\Blog\Models\Tag;
+use Soda\Blog\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Soda\Blog\Models\Post;
-use Soda\Blog\Models\Tag;
 
 class ImportController
 {
@@ -23,7 +21,8 @@ class ImportController
         $this->currentBlog = app('CurrentBlog');
     }
 
-    public function index() {
+    public function index()
+    {
         return view('soda-blog::import.index');
     }
 
@@ -48,7 +47,7 @@ class ImportController
 
     public function anyWordpress()
     {
-        echo("<h1>TODO</h1>");
+        echo '<h1>TODO</h1>';
     }
 
     public function importTumblr(Request $request, $offset = 0, $start = true)
@@ -70,13 +69,13 @@ class ImportController
                 //existing:
                 $existing = Post::where('name', $tumblrPost->title)->first();
                 if ($existing && ($tumblrPost->slug != '' || $tumblrPost->slug != '/')) {
-                    echo('Post already exists<br />');
+                    echo 'Post already exists<br />';
                     flush();
                 } else {
                     if (isset($tumblrPost->body) && $tumblrPost->body) {
                         $post = new Post([
                             'name'         => $tumblrPost->title,
-                            'published_at' => date("Y-m-d H:i:s", strtotime($tumblrPost->date)),
+                            'published_at' => date('Y-m-d H:i:s', strtotime($tumblrPost->date)),
                             'slug'         => '/'.$tumblrPost->slug,
                             'status_id'    => 1,
                             'blog_id'      => $this->currentBlog->id,
@@ -86,11 +85,11 @@ class ImportController
                         // Generate slug if imported slug is invalid
                         if ($post->slug == '' || $post->slug == '/') {
                             $post->slug = '/'.uniqid();
-                            echo('Can not get slug for "'.$post->name.'" - using random string instead<br />');
+                            echo 'Can not get slug for "'.$post->name.'" - using random string instead<br />';
                             flush();
                         }
 
-                        echo('Saving post: '.$post->slug.'<br />');
+                        echo 'Saving post: '.$post->slug.'<br />';
                         flush();
 
                         if ($request->input('rehost')) {
@@ -105,13 +104,13 @@ class ImportController
                         }
 
                         // Get the first paragraph
-                        $paragraphs = $this->getElementsByTag(mb_convert_encoding($post->content, 'HTML-ENTITIES', "UTF-8"), 'p');
+                        $paragraphs = $this->getElementsByTag(mb_convert_encoding($post->content, 'HTML-ENTITIES', 'UTF-8'), 'p');
                         $firstParagraph = @$paragraphs->item(0)->nodeValue;
 
                         // Strip down to first 30 words
                         $post->excerpt = $this->fixEncoding(implode(' ', array_slice(explode(' ', $firstParagraph), 0, 30)));
 
-                        echo('Post saved: '.$post->slug.'<br />');
+                        echo 'Post saved: '.$post->slug.'<br />';
                         flush();
 
                         // Save tags
@@ -141,7 +140,7 @@ class ImportController
                 return $importedPosts;
             }
         } else {
-            return null;
+            return;
         }
     }
 
@@ -167,7 +166,7 @@ class ImportController
         $first = null;
         foreach ($images as $img) {
             $originalUrl = $img->getAttribute('src');
-            echo('Rehosting image: '.$originalUrl.'<br />');
+            echo 'Rehosting image: '.$originalUrl.'<br />';
             flush();
             $file = @file_get_contents($originalUrl);
             if ($file) {
@@ -185,21 +184,21 @@ class ImportController
 
                 $rehostedUrl = $driver == 'soda.public' ? '/uploads/'.$final_path : Storage::disk($driver)->url(trim($final_path, '/'));
 
-                echo('Image saved to: '.$rehostedUrl.'<br />');
+                echo 'Image saved to: '.$rehostedUrl.'<br />';
 
-                if (!$first) {
-                    echo('Setting featured to: '.$rehostedUrl);
+                if (! $first) {
+                    echo 'Setting featured to: '.$rehostedUrl;
                     $first = $rehostedUrl;
                 }
                 flush();
                 //and we can now replace it in our original html..
                 $html = str_replace($originalUrl, $rehostedUrl, $html);
             } else {
-                echo('File 404 </br>');
+                echo 'File 404 </br>';
             }
         }
 
-        return (['content' => $html, 'image' => $first]);
+        return ['content' => $html, 'image' => $first];
     }
 
     public function fixEncoding($str)
@@ -232,7 +231,6 @@ class ImportController
         ];
         $chr = array_keys($chr_map); // but: for efficiency you should
         $rpl = array_values($chr_map); // pre-calculate these two arrays
-        return str_replace($chr, $rpl, html_entity_decode($str, ENT_QUOTES, "UTF-8"));
+        return str_replace($chr, $rpl, html_entity_decode($str, ENT_QUOTES, 'UTF-8'));
     }
-
 }

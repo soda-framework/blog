@@ -1,9 +1,10 @@
 <?php
+
 namespace Soda\Blog\Models;
 
+use Soda\Cms\Models\Field;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Soda\Cms\Models\Field;
 
 class PostSetting extends Model
 {

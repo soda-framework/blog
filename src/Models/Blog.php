@@ -18,7 +18,7 @@ class Blog extends Model
         'rss_enabled',
         'rss_slug',
         'rss_view',
-        'rss_strip_tags'
+        'rss_strip_tags',
     ];
 
     public function posts()
