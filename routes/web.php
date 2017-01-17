@@ -2,11 +2,11 @@
 
 $blog = app('CurrentBlog');
 
-if($blog->id) {
+if ($blog->id) {
     Route::group(['middleware' => ['web', 'soda.web', 'soda.auth']], function () use ($blog) {
         $blog_cms_slug = config('soda-blog.cms_slug', 'blog');
 
-        Route::group(['prefix' => config('soda.cms.path') . '/' . trim($blog_cms_slug, '/')], function () {
+        Route::group(['prefix' => config('soda.cms.path').'/'.trim($blog_cms_slug, '/')], function () {
             Route::get('/', 'BlogController@index')->name('soda.cms.blog.index');
             Route::get('create', 'BlogController@create')->name('soda.cms.blog.create');
             Route::get('edit/{id}', 'BlogController@edit')->name('soda.cms.blog.edit');
@@ -18,7 +18,7 @@ if($blog->id) {
 
             Route::post('sort', '\Rutorika\Sortable\SortableController@sort')->name('soda.cms.blog.sort');
 
-            Route::group(['prefix' => 'import'], function() {
+            Route::group(['prefix' => 'import'], function () {
                 Route::get('/', 'ImportController@index')->name('soda.cms.blog.import');
                 Route::get('tumblr', 'ImportController@getTumblr')->name('soda.cms.blog.import.tumblr');
                 Route::post('tumblr', 'ImportController@postTumblr')->name('soda.cms.blog.import.tumblr.save');
@@ -28,12 +28,12 @@ if($blog->id) {
     });
 
     if (isset($blog) && $blog) {
-        Route::group(['prefix' => trim($blog->slug, '/')], function() use ($blog) {
+        Route::group(['prefix' => trim($blog->slug, '/')], function () use ($blog) {
             if ($blog->list_view) {
                 Route::get('/', 'FrontendController@showListing')->name('soda.blog.listing');
             }
 
-            if($blog->rss_enabled == true) {
+            if ($blog->rss_enabled == true) {
                 Route::get($blog->rss_slug, 'FrontendController@rss')->name('soda.blog.rss');
             }
         });

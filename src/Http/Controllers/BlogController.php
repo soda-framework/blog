@@ -3,12 +3,12 @@
 namespace Soda\Blog\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Soda\Blog\Models\Post;
-use Soda\Blog\Models\PostSetting;
 use Soda\Blog\Models\Tag;
+use Soda\Blog\Models\Post;
 use Soda\Cms\Models\Field;
+use Illuminate\Http\Request;
+use Soda\Blog\Models\PostSetting;
+use Illuminate\Support\Facades\Auth;
 
 class BlogController
 {
@@ -110,7 +110,7 @@ class BlogController
         ]));
 
         // Only make changes if this post is newly created
-        if (!$post->id) {
+        if (! $post->id) {
             // Set the post author
             $post->user_id = Auth::user()->id;
 
@@ -161,7 +161,7 @@ class BlogController
                         'name'     => $settingName,
                         'field_id' => $fieldId,
                     ])->fill([
-                        'value' => \SodaForm::field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request)
+                        'value' => \SodaForm::field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request),
                     ]);
 
                     $post->settings()->save($settingModel);
