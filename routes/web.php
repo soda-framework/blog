@@ -30,14 +30,14 @@ if ($blog->id) {
     if (isset($blog) && $blog) {
         Route::group(['prefix' => trim($blog->slug, '/')], function () use ($blog) {
             if ($blog->list_view) {
-                Route::get('/', 'FrontendController@showListing')->name('soda.blog.listing');
+                Route::get('/', 'FrontendController@showListing')->name('soda.blog.listing')->middleware('web');
             }
 
             if ($blog->rss_enabled == true) {
-                Route::get($blog->rss_slug, 'FrontendController@rss')->name('soda.blog.rss');
+                Route::get($blog->rss_slug, 'FrontendController@rss')->name('soda.blog.rss')->middleware('web');
             }
 
-            //Route::any('{slug?}', 'FrontendController@showPost')->name('soda.blog.post')->where('slug', '(.*)');
+            Route::any('{slug?}', 'FrontendController@showPost')->name('soda.blog.post')->where('slug', '(.*)')->middleware('web');
         });
     }
 }

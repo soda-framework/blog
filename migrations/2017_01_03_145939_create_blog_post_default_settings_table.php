@@ -16,8 +16,8 @@ class CreateBlogPostDefaultSettingsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('value', 65535);
-            $table->text('field_id', 65535);
-            $table->integer('blog_id');
+            $table->integer('field_id')->unsigned()->index('FK_blog_post_default_settings_fields');
+            $table->integer('blog_id')->unsigned()->index('FK_blog_post_default_settings_blogs');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -45,6 +45,11 @@ class Post extends Model
         return $this->hasMany(PostSetting::class);
     }
 
+    public function defaultSettings()
+    {
+        return $this->hasMany(PostDefaultSetting::class, 'blog_id', 'blog_id');
+    }
+
     public function blog()
     {
         return $this->belongsTo(Blog::class);

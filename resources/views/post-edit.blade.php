@@ -76,7 +76,7 @@
             </div>
             <div class="col-lg-9 col-xs-12">
                 <div class="content-block">
-                    {!! SodaForm::fancyupload([
+                    {!! SodaForm::upload([
                         'name'        => 'Featured image',
                         'field_name'  => 'featured_image',
                     ])->setModel($post) !!}

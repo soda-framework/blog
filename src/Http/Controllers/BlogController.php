@@ -3,15 +3,20 @@
 namespace Soda\Blog\Http\Controllers;
 
 use Carbon\Carbon;
-use Soda\Blog\Models\Tag;
-use Soda\Blog\Models\Post;
-use Soda\Cms\Models\Field;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
-use Soda\Blog\Models\PostSetting;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Soda\Blog\Models\Post;
+use Soda\Blog\Models\PostSetting;
+use Soda\Blog\Models\Tag;
+use Soda\Cms\Foundation\Uploader;
+use Soda\Cms\Models\Field;
 
-class BlogController
+class BlogController extends Controller
 {
+    use ValidatesRequests;
+
     protected $currentBlog;
 
     public function __construct()
@@ -83,7 +88,7 @@ class BlogController
         return view('soda-blog::post-edit', [
             'blog'     => $this->currentBlog,
             'post'     => new Post,
-            'settings' => $this->currentBlog->postDefaultSettings->groupBy('name'),
+            'settings' => $this->currentBlog->postDefaultSettings,
         ]);
     }
 
@@ -100,6 +105,13 @@ class BlogController
 
     public function save(Request $request, $id = null)
     {
+        $this->validate($request, [
+            'name' => 'required',
+            'slug'  => 'required',
+        ], [
+            'name.required' => 'The title field is required'
+        ]);
+
         $post = $id ? $this->currentBlog->posts()->with('settings')->findOrFail($id) : new Post;
 
         $post->fill($request->only([
@@ -110,7 +122,7 @@ class BlogController
         ]));
 
         // Only make changes if this post is newly created
-        if (! $post->id) {
+        if (!$post->id) {
             // Set the post author
             $post->user_id = Auth::user()->id;
 
@@ -144,6 +156,10 @@ class BlogController
             }
 
             $post->tags()->sync($tags->pluck('id')->toArray());
+        }
+
+        if ($request->hasFile('featured_image')) {
+            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'));
         }
 
         // Save post to the database
@@ -184,7 +200,8 @@ class BlogController
 
     protected function getPostSettings(Post $post)
     {
-        $defaultSettings = $post->blog->postDefaultSettings()->with('field')->get();
+        $defaultSettings = $post->defaultSettings()->with('field')->get();
+
         $settings = collect();
 
         // Iterate over our default settings
