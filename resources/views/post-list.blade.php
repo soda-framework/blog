@@ -101,7 +101,7 @@
                                 <span class="{{ $post->status == \Soda\Cms\Support\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span>
                                 <span style="margin-left:5px">{{ $post->name }}</span>
                             </td>
-                            <td class="text-monospaced" style="font-size:12px">/{{ $blog->slug . $post->slug }}</td>
+                            <td class="text-monospaced" style="font-size:12px">/{{ trim($blog->slug . $post->slug, '/') }}</td>
                             <td>{{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.blog.publish_timezone'))->toDayDateTimeString() : '' }}</td>
                             <td>
                                 <div class="option-buttons pull-right">
