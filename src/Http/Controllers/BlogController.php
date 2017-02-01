@@ -66,7 +66,7 @@ class BlogController extends Controller
         }
 
         if ($search) {
-            $posts = $posts->whereRaw('MATCH(name,singletags,content) AGAINST (? IN NATURAL LANGUAGE MODE)', [$search]);
+            $posts = $posts->searchText($search);
         }
 
         if ($status == '0' || $status == '1') {

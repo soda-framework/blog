@@ -70,6 +70,11 @@ class Post extends Model
         return $query->where('blog_id', $id);
     }
 
+    public function scopeSearchText($q, $searchQuery)
+    {
+        return $q->whereRaw('MATCH(name,singletags,content) AGAINST (? IN NATURAL LANGUAGE MODE)', [$searchQuery]);
+    }
+
     public function getSetting($settingName)
     {
         $settings = $this->settings->filter(function ($setting) use ($settingName) {
