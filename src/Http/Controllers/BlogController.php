@@ -3,15 +3,15 @@
 namespace Soda\Blog\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Soda\Blog\Models\Tag;
+use Soda\Blog\Models\Post;
+use Soda\Cms\Models\Field;
 use Illuminate\Http\Request;
+use Soda\Blog\Models\PostSetting;
+use Soda\Cms\Foundation\Uploader;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Soda\Blog\Models\Post;
-use Soda\Blog\Models\PostSetting;
-use Soda\Blog\Models\Tag;
-use Soda\Cms\Foundation\Uploader;
-use Soda\Cms\Models\Field;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class BlogController extends Controller
 {
@@ -109,7 +109,7 @@ class BlogController extends Controller
             'name' => 'required',
             'slug'  => 'required',
         ], [
-            'name.required' => 'The title field is required'
+            'name.required' => 'The title field is required',
         ]);
 
         $post = $id ? $this->currentBlog->posts()->with('settings')->findOrFail($id) : new Post;
@@ -122,7 +122,7 @@ class BlogController extends Controller
         ]));
 
         // Only make changes if this post is newly created
-        if (!$post->id) {
+        if (! $post->id) {
             // Set the post author
             $post->user_id = Auth::user()->id;
 
