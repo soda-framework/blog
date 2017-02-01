@@ -95,43 +95,26 @@ class Post extends Model
         }
     }
 
-    public function getRelated($id = null, $limit = null)
+    public function scopeRelated($q, $relatedId)
     {
-        $post = $id !== null ? static::find($id) : static::find($this->id);
+        $postTable = $this->getTable();
+        $tagsTable = $this->tags()->getTable();
 
-        //OK, a bit of a nasty ass query to figure out similar blog posts based on tags.
-        /*
-        $related = DB::select(DB::raw('SELECT bpt.post_id, p.*, COUNT(post_id) as matched_tags
-            FROM blog_post_tag bpt
-            INNER JOIN
-                (SELECT tag_id
-                 FROM blog_post_tag
-                 WHERE post_id = '.$post->id.') otags ON bpt.tag_id = otags.tag_id
-            INNER JOIN blog_posts p ON bpt.post_id = p.id
-            WHERE bpt.post_id <> '.$post->id.'
-            AND deleted_at IS NULL
-            GROUP BY bpt.post_id, p.name
-            ORDER BY COUNT(post_id)'.($limit ? " LIMIT $limit" : "")));
-        */
-
-        $tagsTable = (new Tag)->getTable();
-        $postTable = (new self)->getTable();
-
-        $related = Tag::select("$tagsTable.post_id", "$postTable.*", DB::raw("COUNT($tagsTable.post_id) as matched_tags"))
-            ->join("$tagsTable as otherTags", function ($join) use ($tagsTable, $post) {
-                $join->on("$tagsTable.tag_id", '=', 'otherTags.tag_id')
-                    ->where('otherTags.post_id', '=', $post->id);
+        return $q->select("$postTable.*", DB::raw("COUNT(`relatedTags`.`post_id`) as matched_tags"))
+            ->join("$tagsTable as postTags", function ($join) use ($postTable) {
+                $join->on("postTags.post_id", '=', "$postTable.id");
             })
-            ->join(self::class, "$tagsTable.post_id", '=', "$postTable.id")
-            ->where("$tagsTable.post_id", '!=', $post->id)
-            ->groupBy("$tagsTable.post_id", "$postTable.name")
-            ->orderBy('matched_tags');
+            ->join("$tagsTable as relatedTags", function ($join) {
+                $join->on("relatedTags.tag_id", '=', 'postTags.tag_id')->on("postTags.post_id", "!=", "relatedTags.post_id");
+            })
+            ->where("$postTable.id", '!=', $relatedId)
+            ->groupBy("$postTable.id")
+            ->orderBy('matched_tags', 'DESC');
+    }
 
-        if ($limit) {
-            $related->take($limit);
-        }
-
-        return $related;
+    public function getRelatedQuery()
+    {
+        return (new static)->related($this->id);
     }
 
     public function getTitle()
@@ -142,5 +125,10 @@ class Post extends Model
     public function getAuthorName()
     {
         return isset($this->author) ? $this->author->name : null;
+    }
+
+    public function getPublishDate()
+    {
+        return $this->published_at ? $this->published_at : $this->created_at;
     }
 }

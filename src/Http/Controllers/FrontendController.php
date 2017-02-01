@@ -23,7 +23,7 @@ class FrontendController
     public function showPost($slug)
     {
         $slug = '/'.ltrim($slug, '/');
-        $post = $this->currentBlog->posts()->with('tags', 'author')->where('slug', $slug)->first();
+        $post = $this->currentBlog->posts()->with('tags', 'author', 'settings')->where('slug', $slug)->first();
 
         if ($post) {
             return view($post->view ?: $this->currentBlog->single_view, [
