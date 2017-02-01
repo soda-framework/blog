@@ -16,7 +16,7 @@ class FrontendController
     public function showListing()
     {
         return view($this->currentBlog->list_view, [
-            'blog'  => $this->currentBlog
+            'blog'  => $this->currentBlog,
         ]);
     }
 
