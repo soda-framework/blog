@@ -75,6 +75,13 @@ class Post extends Model
         return $q->whereRaw('MATCH(name,singletags,content) AGAINST (? IN NATURAL LANGUAGE MODE)', [$searchQuery]);
     }
 
+    public function scopeOrderByPublishDate($q)
+    {
+        $table = $this->getTable();
+
+        return $q->orderByRaw("CASE WHEN `$table`.`published_at` IS NULL THEN `$table`.`created_at` ELSE `$table`.`published_at` END DESC");
+    }
+
     public function getSetting($settingName)
     {
         $settings = $this->settings->filter(function ($setting) use ($settingName) {
