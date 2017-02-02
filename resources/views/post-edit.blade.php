@@ -103,7 +103,7 @@
                     @if(count($settings))
                         <hr />
                         @foreach($settings as $setting)
-                            {!! SodaForm::field($setting->field)->setPrefix('setting.'.$setting->field->id) !!}
+                            {!! SodaForm::field($setting->field)->setPrefix('setting.'.$setting->field->id)->setModel($post) !!}
                         @endforeach
                     @endif
                 </div>

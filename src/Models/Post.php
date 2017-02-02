@@ -4,18 +4,19 @@ namespace Soda\Blog\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\URL;
-use Soda\Cms\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use Soda\Cms\Models\Traits\DraftableTrait;
-use Soda\Cms\Models\Traits\SluggableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Soda\Blog\Models\Traits\BlogSortableTrait;
+use Soda\Cms\Models\Traits\DraftableTrait;
+use Soda\Cms\Models\Traits\HasMediaTrait;
+use Soda\Cms\Models\Traits\SluggableTrait;
+use Soda\Cms\Models\User;
 
 class Post extends Model
 {
-    use SoftDeletes, BlogSortableTrait, DraftableTrait, SluggableTrait;
+    use SoftDeletes, BlogSortableTrait, DraftableTrait, SluggableTrait, HasMediaTrait;
 
     public $table = 'blog_posts';
     public $fillable = [
@@ -114,8 +115,7 @@ class Post extends Model
             ->groupBy("$postTable.id")
             ->orderBy('matched_tags', 'DESC');
 
-        if($relatedOnly)
-        {
+        if ($relatedOnly) {
             $q->having('matched_tags', '>', 0);
         }
 
@@ -146,19 +146,18 @@ class Post extends Model
     {
         $currentBlog = app('CurrentBlog');
 
-        if($currentBlog->id == $this->blog_id)
-        {
-            return URL::to($currentBlog->slug . '/' . trim($this->slug, '/'));
+        if ($currentBlog->id == $this->blog_id) {
+            return URL::to($currentBlog->slug.'/'.trim($this->slug, '/'));
         }
 
-        return URL::to($this->blog->slug . '/' . trim($this->slug, '/'));
+        return URL::to($this->blog->slug.'/'.trim($this->slug, '/'));
     }
 
     public function getPreviousPost()
     {
         $query = static::where('id', '!=', $this->id);
 
-        foreach((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '<=' : '>=', $this->$sortableField);
 
             break;
@@ -171,7 +170,7 @@ class Post extends Model
     {
         $query = static::reverseOrder()->where('id', '!=', $this->id);
 
-        foreach((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '>=' : '<=', $this->$sortableField);
 
             break;
