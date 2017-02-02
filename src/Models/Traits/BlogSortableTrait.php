@@ -23,6 +23,8 @@ trait BlogSortableTrait
 {
     use BaseSortableTrait;
 
+    protected static $reversed = false;
+
     /**
      * Adds position to model on creating event.
      */
@@ -46,9 +48,26 @@ trait BlogSortableTrait
             $sortableFields = (array) config('soda.blog.default_sort');
 
             foreach ($sortableFields as $field => $direction) {
-                $builder->orderBy($field, $direction);
+                $builder->orderBy($field, static::isReversed() ? (strtolower($direction) == 'desc' ? 'ASC' : 'DESC') : $direction);
             }
         });
+    }
+
+    public static function reverseOrder()
+    {
+        static::$reversed = true;
+
+        return new static;
+    }
+
+    public static function normalOrder()
+    {
+        static::$reversed = false;
+    }
+
+    public static function isReversed()
+    {
+        return static::$reversed ? true : false;
     }
 
     /**

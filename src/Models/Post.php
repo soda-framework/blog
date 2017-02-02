@@ -2,6 +2,9 @@
 
 namespace Soda\Blog\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\URL;
 use Soda\Cms\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +30,7 @@ class Post extends Model
         'published_at',
         'user_id',
     ];
-    protected $dates = ['published_at', 'deleted_at'];
+    protected $dates = ['publish_date', 'published_at', 'deleted_at'];
     protected static $sortableGroupField = 'blog_id';
     protected static $publishDateField = 'published_at';
 
@@ -37,6 +40,12 @@ class Post extends Model
 
         static::deleting(function ($model) {
             $model->next()->decrement('position');
+        });
+
+        static::addGlobalScope('publish_date', function (Builder $builder) {
+            $table = $builder->getModel()->getTable();
+
+            return $builder->addSelect("$table.*", \DB::raw("CASE WHEN `$table`.`published_at` IS NULL THEN `$table`.`created_at` ELSE `$table`.`published_at` END publish_date"));
         });
     }
 
@@ -75,13 +84,6 @@ class Post extends Model
         return $q->whereRaw('MATCH(name,singletags,content) AGAINST (? IN NATURAL LANGUAGE MODE)', [$searchQuery]);
     }
 
-    public function scopeOrderByPublishDate($q)
-    {
-        $table = $this->getTable();
-
-        return $q->orderByRaw("CASE WHEN `$table`.`published_at` IS NULL THEN `$table`.`created_at` ELSE `$table`.`published_at` END DESC");
-    }
-
     public function getSetting($settingName)
     {
         $settings = $this->settings->filter(function ($setting) use ($settingName) {
@@ -100,7 +102,7 @@ class Post extends Model
         $postTable = $this->getTable();
         $tagsTable = $this->tags()->getTable();
 
-        $q->select("$postTable.*", DB::raw("COUNT(`relatedTags`.`post_id`) as matched_tags"))
+        $q->addSelect("$postTable.*", DB::raw("COUNT(`relatedTags`.`post_id`) as matched_tags"))
             ->join("$tagsTable as postTags", function ($join) use ($postTable) {
                 $join->on("postTags.post_id", '=', "$postTable.id");
             })
@@ -135,8 +137,46 @@ class Post extends Model
         return isset($this->author) ? $this->author->name : null;
     }
 
-    public function getPublishDate()
+    public function getPublishDateAttribute($value)
     {
-        return $this->published_at ? $this->published_at : $this->created_at;
+        return $value ? Carbon::parse($value) : ($this->published_at ? $this->published_at : $this->created_at);
+    }
+
+    public function getFullUrl()
+    {
+        $currentBlog = app('CurrentBlog');
+
+        if($currentBlog->id == $this->blog_id)
+        {
+            return URL::to($currentBlog->slug . '/' . trim($this->slug, '/'));
+        }
+
+        return URL::to($this->blog->slug . '/' . trim($this->slug, '/'));
+    }
+
+    public function getPreviousPost()
+    {
+        $query = static::where('id', '!=', $this->id);
+
+        foreach((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+            $query->where($sortableField, strtolower($direction) == 'DESC' ? '<=' : '>=', $this->$sortableField);
+
+            break;
+        }
+
+        return $query->first();
+    }
+
+    public function getNextPost()
+    {
+        $query = static::reverseOrder()->where('id', '!=', $this->id);
+
+        foreach((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+            $query->where($sortableField, strtolower($direction) == 'DESC' ? '>=' : '<=', $this->$sortableField);
+
+            break;
+        }
+
+        return $query->first();
     }
 }

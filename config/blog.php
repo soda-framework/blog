@@ -7,7 +7,7 @@ return [
 
     'default_sort' => [
         'position'     => 'ASC',
-        'published_at' => 'DESC',
+        'publish_date' => 'DESC',
     ],
 
     'rss' => [
