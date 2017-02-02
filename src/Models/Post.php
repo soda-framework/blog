@@ -52,7 +52,7 @@ class Post extends Model
 
     public function settings()
     {
-        return $this->hasMany(PostSetting::class);
+        return $this->hasMany(PostSetting::class, 'post_id');
     }
 
     public function defaultSettings()
