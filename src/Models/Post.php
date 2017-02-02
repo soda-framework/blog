@@ -3,11 +3,11 @@
 namespace Soda\Blog\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\URL;
 use Soda\Cms\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Soda\Cms\Models\Traits\DraftableTrait;
 use Soda\Cms\Models\Traits\SluggableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -102,20 +102,19 @@ class Post extends Model
         $postTable = $this->getTable();
         $tagsTable = $this->tags()->getTable();
 
-        $q->addSelect("$postTable.*", DB::raw("COUNT(`relatedTags`.`post_id`) as matched_tags"))
+        $q->addSelect("$postTable.*", DB::raw('COUNT(`relatedTags`.`post_id`) as matched_tags'))
             ->join("$tagsTable as postTags", function ($join) use ($postTable) {
-                $join->on("postTags.post_id", '=', "$postTable.id");
+                $join->on('postTags.post_id', '=', "$postTable.id");
             })
             ->join("$tagsTable as relatedTags", function ($join) {
-                $join->on("relatedTags.tag_id", '=', 'postTags.tag_id')->on("postTags.post_id", "!=", "relatedTags.post_id");
+                $join->on('relatedTags.tag_id', '=', 'postTags.tag_id')->on('postTags.post_id', '!=', 'relatedTags.post_id');
             })
-            ->where("relatedTags.post_id", $relatedId)
+            ->where('relatedTags.post_id', $relatedId)
             ->where("$postTable.id", '!=', $relatedId)
             ->groupBy("$postTable.id")
             ->orderBy('matched_tags', 'DESC');
 
-        if($relatedOnly)
-        {
+        if ($relatedOnly) {
             $q->having('matched_tags', '>', 0);
         }
 
@@ -146,19 +145,18 @@ class Post extends Model
     {
         $currentBlog = app('CurrentBlog');
 
-        if($currentBlog->id == $this->blog_id)
-        {
-            return URL::to($currentBlog->slug . '/' . trim($this->slug, '/'));
+        if ($currentBlog->id == $this->blog_id) {
+            return URL::to($currentBlog->slug.'/'.trim($this->slug, '/'));
         }
 
-        return URL::to($this->blog->slug . '/' . trim($this->slug, '/'));
+        return URL::to($this->blog->slug.'/'.trim($this->slug, '/'));
     }
 
     public function getPreviousPost()
     {
         $query = static::where('id', '!=', $this->id);
 
-        foreach((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '<=' : '>=', $this->$sortableField);
 
             break;
@@ -171,7 +169,7 @@ class Post extends Model
     {
         $query = static::reverseOrder()->where('id', '!=', $this->id);
 
-        foreach((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '>=' : '<=', $this->$sortableField);
 
             break;
