@@ -100,20 +100,19 @@ class Post extends Model
         $postTable = $this->getTable();
         $tagsTable = $this->tags()->getTable();
 
-        $q->select("$postTable.*", DB::raw("COUNT(`relatedTags`.`post_id`) as matched_tags"))
+        $q->select("$postTable.*", DB::raw('COUNT(`relatedTags`.`post_id`) as matched_tags'))
             ->join("$tagsTable as postTags", function ($join) use ($postTable) {
-                $join->on("postTags.post_id", '=', "$postTable.id");
+                $join->on('postTags.post_id', '=', "$postTable.id");
             })
             ->join("$tagsTable as relatedTags", function ($join) {
-                $join->on("relatedTags.tag_id", '=', 'postTags.tag_id')->on("postTags.post_id", "!=", "relatedTags.post_id");
+                $join->on('relatedTags.tag_id', '=', 'postTags.tag_id')->on('postTags.post_id', '!=', 'relatedTags.post_id');
             })
-            ->where("relatedTags.post_id", $relatedId)
+            ->where('relatedTags.post_id', $relatedId)
             ->where("$postTable.id", '!=', $relatedId)
             ->groupBy("$postTable.id")
             ->orderBy('matched_tags', 'DESC');
 
-        if($relatedOnly)
-        {
+        if ($relatedOnly) {
             $q->having('matched_tags', '>', 0);
         }
 
