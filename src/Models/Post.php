@@ -31,7 +31,7 @@ class Post extends Model
         'published_at',
         'user_id',
     ];
-    protected $dates = ['publish_date', 'published_at', 'deleted_at'];
+    protected $dates = ['published_at', 'deleted_at'];
     protected static $sortableGroupField = 'blog_id';
     protected static $publishDateField = 'published_at';
 
@@ -41,12 +41,6 @@ class Post extends Model
 
         static::deleting(function ($model) {
             $model->next()->decrement('position');
-        });
-
-        static::addGlobalScope('publish_date', function (Builder $builder) {
-            $table = $builder->getModel()->getTable();
-
-            return $builder->addSelect("$table.*", \DB::raw("CASE WHEN `$table`.`published_at` IS NULL THEN `$table`.`created_at` ELSE `$table`.`published_at` END publish_date"));
         });
     }
 
@@ -72,7 +66,7 @@ class Post extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'blog_post_tag')->withTimestamps();
+        return $this->belongsToMany(Tag::class, 'blog_post_tag', 'post_id', 'tag_id')->withTimestamps();
     }
 
     public function scopeFromBlog($query, $id)
@@ -137,9 +131,9 @@ class Post extends Model
         return isset($this->author) ? $this->author->name : null;
     }
 
-    public function getPublishDateAttribute($value)
+    public function getPublishDateAttribute()
     {
-        return $value ? Carbon::parse($value) : ($this->published_at ? $this->published_at : $this->created_at);
+        return $this->published_at ? $this->published_at : $this->created_at;
     }
 
     public function getFullUrl()

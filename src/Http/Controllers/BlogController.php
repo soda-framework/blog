@@ -146,6 +146,17 @@ class BlogController extends Controller
             ])->getSaveValue($request);
         }
 
+        if(!$post->published_at) {
+            $post->published_at = Carbon::now();
+        }
+
+        if ($request->hasFile('featured_image')) {
+            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'));
+        }
+
+        // Save post to the database
+        $post->save();
+
         // Handle tags
         if ($request->has('singletags')) {
             $post->singletags = implode(',', $request->input('singletags'));
@@ -157,13 +168,6 @@ class BlogController extends Controller
 
             $post->tags()->sync($tags->pluck('id')->toArray());
         }
-
-        if ($request->hasFile('featured_image')) {
-            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'));
-        }
-
-        // Save post to the database
-        $post->save();
 
         if ($request->has('setting')) {
             $fields = Field::whereIn('id', array_keys($request->input('setting')))->get()->keyBy('id');
