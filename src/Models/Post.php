@@ -2,17 +2,15 @@
 
 namespace Soda\Blog\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Soda\Cms\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
-use Soda\Blog\Models\Traits\BlogSortableTrait;
-use Soda\Cms\Models\Traits\DraftableTrait;
+use Illuminate\Database\Eloquent\Model;
 use Soda\Cms\Models\Traits\HasMediaTrait;
+use Soda\Cms\Models\Traits\DraftableTrait;
 use Soda\Cms\Models\Traits\SluggableTrait;
-use Soda\Cms\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Soda\Blog\Models\Traits\BlogSortableTrait;
 
 class Post extends Model
 {
@@ -97,14 +95,14 @@ class Post extends Model
         $postTable = $this->getTable();
         $tagsTable = $this->tags()->getTable();
 
-        $q->addSelect("$postTable.*", DB::raw("COUNT(`relatedTags`.`post_id`) as matched_tags"))
+        $q->addSelect("$postTable.*", DB::raw('COUNT(`relatedTags`.`post_id`) as matched_tags'))
             ->join("$tagsTable as postTags", function ($join) use ($postTable) {
-                $join->on("postTags.post_id", '=', "$postTable.id");
+                $join->on('postTags.post_id', '=', "$postTable.id");
             })
             ->join("$tagsTable as relatedTags", function ($join) {
-                $join->on("relatedTags.tag_id", '=', 'postTags.tag_id')->on("postTags.post_id", "!=", "relatedTags.post_id");
+                $join->on('relatedTags.tag_id', '=', 'postTags.tag_id')->on('postTags.post_id', '!=', 'relatedTags.post_id');
             })
-            ->where("relatedTags.post_id", $relatedId)
+            ->where('relatedTags.post_id', $relatedId)
             ->where("$postTable.id", '!=', $relatedId)
             ->groupBy("$postTable.id")
             ->orderBy('matched_tags', 'DESC');
@@ -151,7 +149,7 @@ class Post extends Model
     {
         $query = static::where('id', '!=', $this->id);
 
-        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '<=' : '>=', $this->$sortableField);
 
             break;
@@ -164,7 +162,7 @@ class Post extends Model
     {
         $query = static::reverseOrder()->where('id', '!=', $this->id);
 
-        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '>=' : '<=', $this->$sortableField);
 
             break;
