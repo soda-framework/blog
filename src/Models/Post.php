@@ -198,4 +198,8 @@ class Post extends Model
 
         return $excerpt;
     }
+
+    public function getPublishDate() {
+        return $this->published_at->setTimezone(config('soda.blog.publish_timezone'));
+    }
 }
