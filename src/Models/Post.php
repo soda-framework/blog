@@ -2,8 +2,6 @@
 
 namespace Soda\Blog\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +20,6 @@ class Post extends Model
     public $fillable = [
         'name',
         'content',
-        'excerpt',
         'slug',
         'singletags',
         'blog_id',
@@ -76,7 +73,9 @@ class Post extends Model
 
     public function scopeSearchText($q, $searchQuery)
     {
-        return $q->whereRaw('MATCH(name,singletags,content) AGAINST (? IN NATURAL LANGUAGE MODE)', [$searchQuery]);
+        return $q->where(function ($sq) use ($searchQuery) {
+            $sq->whereRaw('MATCH(name,singletags,content) AGAINST (? IN NATURAL LANGUAGE MODE)', [$searchQuery])->orWhere('name', 'LIKE', "%$searchQuery%");
+        });
     }
 
     public function getSetting($settingName)
@@ -97,14 +96,14 @@ class Post extends Model
         $postTable = $this->getTable();
         $tagsTable = $this->tags()->getTable();
 
-        $q->addSelect("$postTable.*", DB::raw("COUNT(`relatedTags`.`post_id`) as matched_tags"))
+        $q->addSelect("$postTable.*", DB::raw('COUNT(`relatedTags`.`post_id`) as matched_tags'))
             ->join("$tagsTable as postTags", function ($join) use ($postTable) {
-                $join->on("postTags.post_id", '=', "$postTable.id");
+                $join->on('postTags.post_id', '=', "$postTable.id");
             })
             ->join("$tagsTable as relatedTags", function ($join) {
-                $join->on("relatedTags.tag_id", '=', 'postTags.tag_id')->on("postTags.post_id", "!=", "relatedTags.post_id");
+                $join->on('relatedTags.tag_id', '=', 'postTags.tag_id')->on('postTags.post_id', '!=', 'relatedTags.post_id');
             })
-            ->where("relatedTags.post_id", $relatedId)
+            ->where('relatedTags.post_id', $relatedId)
             ->where("$postTable.id", '!=', $relatedId)
             ->groupBy("$postTable.id")
             ->orderBy('matched_tags', 'DESC');
@@ -151,7 +150,7 @@ class Post extends Model
     {
         $query = static::where('id', '!=', $this->id);
 
-        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '<=' : '>=', $this->$sortableField);
 
             break;
@@ -164,12 +163,39 @@ class Post extends Model
     {
         $query = static::reverseOrder()->where('id', '!=', $this->id);
 
-        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '>=' : '<=', $this->$sortableField);
 
             break;
         }
 
         return $query->first();
+    }
+
+    public function getExcerpt($numCharacters = null, $words = true, $stripTags = true)
+    {
+        $excerpt = $this->content;
+
+        // Remove HTML tags
+        if ($stripTags) {
+            $excerpt = strip_tags($excerpt);
+        }
+
+        if ($numCharacters) {
+            if ($words) {
+                // Reduce to word count
+                $excerptWords = explode(' ', $excerpt);
+                if (count($excerptWords) > $numCharacters) {
+                    $excerpt = implode(' ', array_slice($excerptWords, 0, $numCharacters));
+                }
+            } else {
+                // Reduce to character count
+                if (strlen($excerpt) > $numCharacters) {
+                    $excerpt = substr($excerpt, 0, $numCharacters);
+                }
+            }
+        }
+
+        return $excerpt;
     }
 }

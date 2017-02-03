@@ -18,7 +18,6 @@ class CreateBlogPostsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('content', 16777215);
-            $table->text('excerpt', 65535);
             $table->string('slug');
             $table->string('singletags')->nullable();
             $table->string('featured_image')->nullable();

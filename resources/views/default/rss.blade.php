@@ -32,18 +32,6 @@ $lastUpdated = $posts->max('updated_at');
                            type="image/jpeg"></media:content>
             @endif
 
-            @if($post->excerpt)
-                @if(config('soda.blog.rss.strip_tags'))
-                    <content>{{ strip_tags($post->excerpt) }}</content>
-                @else
-                    <content type="xhtml">
-                        <div xmlns="http://www.w3.org/1999/xhtml">
-                            {{ $post->excerpt }}
-                        </div>
-                    </content>
-                @endif
-            @endif
-
             @if($post->content)
                 @if(config('soda.blog.rss.strip_tags'))
                     <content>{{ strip_tags($post->content) }}</content>

@@ -81,11 +81,6 @@
                         'field_name'  => 'featured_image',
                     ])->setModel($post) !!}
 
-                    {!! SodaForm::textarea([
-                        'name'        => 'Excerpt',
-                        'field_name'  => 'excerpt',
-                    ])->setModel($post) !!}
-
                     {!! SodaForm::tinymce([
                         'name'        => 'Post body',
                         'field_name'  => 'content',

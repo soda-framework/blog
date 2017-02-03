@@ -106,7 +106,7 @@ class BlogController extends Controller
     public function save(Request $request, $id = null)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name'  => 'required',
             'slug'  => 'required',
         ], [
             'name.required' => 'The title field is required',
@@ -117,7 +117,6 @@ class BlogController extends Controller
         $post->fill($request->only([
             'name',
             'status',
-            'excerpt',
             'content',
         ]));
 
@@ -146,7 +145,7 @@ class BlogController extends Controller
             ])->getSaveValue($request);
         }
 
-        if(!$post->published_at) {
+        if (! $post->published_at) {
             $post->published_at = Carbon::now();
         }
 
