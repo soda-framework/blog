@@ -146,7 +146,7 @@ class BlogController extends Controller
             ])->getSaveValue($request);
         }
 
-        if(!$post->published_at) {
+        if (! $post->published_at) {
             $post->published_at = Carbon::now();
         }
 
