@@ -2,15 +2,15 @@
 
 namespace Soda\Blog\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Soda\Cms\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
-use Soda\Blog\Models\Traits\BlogSortableTrait;
-use Soda\Cms\Models\Traits\DraftableTrait;
+use Illuminate\Database\Eloquent\Model;
 use Soda\Cms\Models\Traits\HasMediaTrait;
+use Soda\Cms\Models\Traits\DraftableTrait;
 use Soda\Cms\Models\Traits\SluggableTrait;
-use Soda\Cms\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Soda\Blog\Models\Traits\BlogSortableTrait;
 
 class Post extends Model
 {
