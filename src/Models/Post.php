@@ -172,7 +172,7 @@ class Post extends Model
         return $query->first();
     }
 
-    public function getExcerpt($numCharacters = null, $words = true, $stripTags = true)
+    public function getExcerpt($numCharacters = null, $type = 'words', $stripTags = true)
     {
         $excerpt = $this->content;
 
@@ -182,11 +182,17 @@ class Post extends Model
         }
 
         if ($numCharacters) {
-            if ($words) {
+            if ($type == 'words') {
                 // Reduce to word count
                 $excerptWords = explode(' ', $excerpt);
                 if (count($excerptWords) > $numCharacters) {
                     $excerpt = implode(' ', array_slice($excerptWords, 0, $numCharacters));
+                }
+            } elseif ($type == 'sentences') {
+                // Reduce to word count
+                $excerptSentences = explode('.', $excerpt);
+                if (count($excerptSentences) > $numCharacters) {
+                    $excerpt = implode('.', array_slice($excerptSentences, 0, $numCharacters)).'.';
                 }
             } else {
                 // Reduce to character count
