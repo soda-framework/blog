@@ -2,8 +2,8 @@
 
 namespace Soda\Blog\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Soda\Cms\Models\Field;
+use Illuminate\Database\Eloquent\Model;
 
 class PostSetting extends Model
 {
