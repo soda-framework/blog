@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateBlogPostDefaultSettingsTable extends Migration
 {
@@ -19,7 +19,6 @@ class CreateBlogPostDefaultSettingsTable extends Migration
             $table->integer('field_id')->unsigned()->index('FK_blog_post_default_settings_fields');
             $table->integer('blog_id')->unsigned()->index('FK_blog_post_default_settings_blogs');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
