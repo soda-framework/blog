@@ -28,8 +28,6 @@ class CreateBlogPostsTable extends Migration
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['blog_id', 'slug', 'deleted_at', 'status', 'published_at']);
         });
 
         DB::statement('ALTER TABLE blog_posts ADD FULLTEXT full(name, content, singletags)');
