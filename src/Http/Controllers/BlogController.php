@@ -87,7 +87,7 @@ class BlogController extends Controller
     {
         return view('soda-blog::post-edit', [
             'blog'     => $this->currentBlog,
-            'post'     => new Post,
+            'post'     => new Post(['status' => 0]),
             'settings' => $this->currentBlog->postDefaultSettings,
         ]);
     }
