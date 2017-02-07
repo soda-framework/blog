@@ -41,7 +41,7 @@ class Blog extends Model
 
         $postDates = $this->posts()->select(DB::raw('YEAR(CONVERT_TZ(published_at, "+00:00", "'.$timezoneOffset.'")) as year'), DB::raw('MONTH(CONVERT_TZ(published_at, "+00:00", "'.$timezoneOffset.'")) as month'))->groupBy('year')->groupBy('month')->get();
 
-        return $postDates->sortBy('month')->groupBy('year')->sortBy('year')->map(function ($item) {
+        return $postDates->sortByDesc('month')->groupBy('year')->sortByDesc('year')->map(function ($item) {
             return $item->map(function ($subItem) {
                 return Carbon::createFromDate($subItem->year, $subItem->month)->startOfMonth();
             });
