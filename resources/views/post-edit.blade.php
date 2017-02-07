@@ -14,7 +14,7 @@
 
 @section('content-heading-button')
     @include(soda_cms_view_path('partials.buttons.save'), ['submits' => '#post-form'])
-    <button class="btn btn-success btn-lg" data-submits-and-publishes="#post-form">
+    <button class="btn btn-success btn-lg" data-submits="#post-form" data-publishes>
         <i class="fa fa-eye"></i>
         <span>Save and publish</span>
     </button>
@@ -111,7 +111,7 @@
     </form>
     <div class="content-bottom">
         @include(soda_cms_view_path('partials.buttons.save'), ['submits' => '#post-form'])
-        <button class="btn btn-success btn-lg" data-submits-and-publishes="#post-form">
+        <button class="btn btn-success btn-lg" data-submits="#post-form" data-publishes>
             <i class="fa fa-eye"></i>
             <span>Save and publish</span>
         </button>
