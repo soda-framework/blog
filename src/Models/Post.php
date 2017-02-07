@@ -78,6 +78,26 @@ class Post extends Model
         });
     }
 
+    public function scopePublishedAfter($q, $date)
+    {
+        if ($date instanceof \DateTime) {
+            $date->timezone = config('soda.blog.publish_timezone');
+            $date->setTimezone('GMT');
+        }
+
+        return $q->where('published_at', '>=', $date);
+    }
+
+    public function scopePublishedBefore($q, $date)
+    {
+        if ($date instanceof \DateTime) {
+            $date->timezone = config('soda.blog.publish_timezone');
+            $date->setTimezone('GMT');
+        }
+
+        return $q->where('published_at', '<', $date);
+    }
+
     public function getSetting($settingName)
     {
         $settings = $this->settings->filter(function ($setting) use ($settingName) {
