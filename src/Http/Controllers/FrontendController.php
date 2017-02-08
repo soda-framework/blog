@@ -44,7 +44,7 @@ class FrontendController
         $posts = $this->currentBlog->posts()->with('tags', 'author')->take(20)->get();
 
         return response()->view($this->currentBlog->rss_view, [
-            'blog' => $this->currentBlog,
+            'blog'  => $this->currentBlog,
             'posts' => $posts,
         ])->header('Content-Type', 'text/xml');
     }
