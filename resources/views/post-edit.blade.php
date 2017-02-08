@@ -52,7 +52,7 @@
 
                     {!! SodaForm::slug([
                         'name'        => 'Slug',
-                        'description' => 'The URL to reach this post',
+                        'description' => 'The URL to reach this ' . trans('soda-blog::general.post'),
                         'field_name'  => 'slug',
                         'field_params' => [
                             'allow_external' => false,
@@ -70,7 +70,7 @@
                     {!! SodaForm::datetime([
                         'name'         => 'Publish at',
                         'field_name'   => 'published_at',
-                        'description'  => 'Note: post must be published with toggle above for date to take affect',
+                        'description'  => 'Note: ' . trans('soda-blog::general.post') . ' must be published with toggle above for date to take affect',
                         'field_params' => [
                             'timezone' => config('soda.blog.publish_timezone'),
                         ]
@@ -86,7 +86,7 @@
                     ])->setModel($post) !!}
 
                     {!! SodaForm::tinymce([
-                        'name'        => 'Post body',
+                        'name'        => ucfirst(trans('soda-blog::general.post')) . ' body',
                         'field_name'  => 'content',
                     ])->setModel($post) !!}
 
@@ -97,6 +97,7 @@
                             'multiple'   => true,
                             'array-save' => 'delimit:,',
                         ],
+                        'description' => 'A list of keywords describing the ' . trans('soda-blog::general.post') . '. Press enter to complete each keyword.'
                     ])->setModel($post) !!}
 
                     @if(count($settings))
