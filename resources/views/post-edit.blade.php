@@ -38,16 +38,16 @@
             @endif
         </div>
     @endif
-    <form id="post-form" method="POST" action='{{ route('soda.cms.blog.save', @$post->id)}}'
-          enctype="multipart/form-data">
+    <form id="post-form" method="POST" action="{{ route('soda.cms.blog.save', @$post->id) }}" enctype="multipart/form-data">
         {!! csrf_field() !!}
         <div class="row">
 
             <div class="col-lg-3 pull-right col-xs-12">
                 <div class="content-block">
                     {!! SodaForm::text([
-                        'name'        => 'Title',
-                        'field_name'  => 'name',
+                        'name'         => 'Title',
+                        'field_name'   => 'name',
+                        'field_params' => config('soda.blog.field_params.name'),
                     ])->setLayout(soda_cms_view_path('partials.inputs.layouts.stacked'))->setModel($post) !!}
 
                     {!! SodaForm::slug([
@@ -81,22 +81,24 @@
             <div class="col-lg-9 col-xs-12">
                 <div class="content-block">
                     {!! SodaForm::upload([
-                        'name'        => 'Featured image',
-                        'field_name'  => 'featured_image',
+                        'name'         => 'Featured image',
+                        'field_name'   => 'featured_image',
+                        'field_params' => config('soda.blog.field_params.featured_image'),
                     ])->setModel($post) !!}
 
                     {!! SodaForm::tinymce([
-                        'name'        => ucfirst(trans('soda-blog::general.post')) . ' body',
-                        'field_name'  => 'content',
+                        'name'         => ucfirst(trans('soda-blog::general.post')) . ' body',
+                        'field_name'   => 'content',
+                        'field_params' => config('soda.blog.field_params.content'),
                     ])->setModel($post) !!}
 
                     {!! SodaForm::combobox([
                         'name'        => 'Tags',
                         'field_name'  => 'singletags',
-                        'field_params' => [
+                        'field_params' => array_merge([
                             'multiple'   => true,
                             'array-save' => 'delimit:,',
-                        ],
+                        ], config('soda.blog.field_params.featured_image')),
                         'description' => 'A list of keywords describing the ' . trans('soda-blog::general.post') . '. Press enter to complete each keyword.'
                     ])->setModel($post) !!}
 

@@ -150,7 +150,7 @@ class BlogController extends Controller
         }
 
         if ($request->hasFile('featured_image')) {
-            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'));
+            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'), config('soda.blog.field_params.featured_image.intervention'));
         }
 
         // Save post to the database

@@ -16,4 +16,11 @@ return [
         'view'       => 'soda-blog::default.rss',
         'strip_tags' => true,
     ],
+
+    'field_params' => [
+        'name'           => [],
+        'featured_image' => [],
+        'content'        => [],
+        'singletags'     => [],
+    ],
 ];
