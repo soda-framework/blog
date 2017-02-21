@@ -33,16 +33,7 @@ class BlogController extends Controller
 
     public function saveSettings(Request $request)
     {
-        $this->currentBlog->fill($request->only([
-            'name',
-            'slug',
-            'single_view',
-            'list_view',
-            'rss_enabled',
-            'rss_slug',
-            'rss_view',
-            'rss_strip_tags',
-        ]))->save();
+        $this->currentBlog->fill($request->input())->save();
 
         return redirect()->route('soda.cms.blog.settings')->with('success', 'Blog updated successfully');
     }
