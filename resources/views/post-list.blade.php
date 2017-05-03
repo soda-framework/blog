@@ -1,25 +1,8 @@
 @extends(soda_cms_view_path('layouts.inner'))
 
-@section('breadcrumb')
-    <ol class="breadcrumb">
-        <li><a href="{{ route('soda.home') }}">Home</a></li>
-        <li><a href="{{ route('soda.cms.blog.index') }}">{{ ucfirst(trans('soda-blog::general.blog')) }}</a></li>
-        <li class="active">{{ ucfirst(trans('soda-blog::general.posts')) }}</li>
-    </ol>
-@stop
-
-@section('head.title')
-    <title>{{ ucfirst(trans('soda-blog::general.blog')) }} {{ ucfirst(trans('soda-blog::general.posts')) }}</title>
-@endsection
-
 @section('content-heading-button')
     @include(soda_cms_view_path('partials.buttons.create'), ['url' => route('soda.cms.blog.create')])
 @stop
-
-@include(soda_cms_view_path('partials.heading'), [
-    'icon'  => 'fa fa-book',
-    'title' => ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')),
-])
 
 @section('content')
     <div class="content-top">

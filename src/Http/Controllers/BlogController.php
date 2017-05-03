@@ -5,13 +5,13 @@ namespace Soda\Blog\Http\Controllers;
 use Carbon\Carbon;
 use Soda\Blog\Models\Tag;
 use Soda\Blog\Models\Post;
-use Soda\Cms\Models\Field;
+use Soda\Cms\Database\Models\Field;
 use Illuminate\Http\Request;
 use Soda\Blog\Models\PostSetting;
-use Soda\Cms\Foundation\Uploader;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Soda\Cms\Foundation\Uploads\Uploader;
 
 class BlogController extends Controller
 {
@@ -22,6 +22,9 @@ class BlogController extends Controller
     public function __construct()
     {
         $this->currentBlog = app('CurrentBlog');
+
+        app('soda.interface')->setHeading(ucfirst(trans('soda-blog::general.blog')))->setHeadingIcon('fa fa-book');
+        app('soda.interface')->breadcrumbs()->addLink(route('soda.home'), 'Home');
     }
 
     public function settings()
@@ -40,6 +43,7 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
+        app('soda.interface')->setHeading(ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
         $sort = $request->input('sort');
         $search = $request->input('search');
         $status = $request->input('status');
@@ -76,6 +80,8 @@ class BlogController extends Controller
 
     public function create()
     {
+        app('soda.interface')->setHeading('New ' . ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
+
         return view('soda-blog::post-edit', [
             'blog'     => $this->currentBlog,
             'post'     => new Post(['status' => 0]),
@@ -85,6 +91,7 @@ class BlogController extends Controller
 
     public function edit($id)
     {
+        app('soda.interface')->setHeading('Editing ' . ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
         $post = $this->currentBlog->posts()->with('blog.postDefaultSettings.field', 'settings.field')->findOrFail($id);
 
         return view('soda-blog::post-edit', [
@@ -141,7 +148,7 @@ class BlogController extends Controller
         }
 
         if ($request->hasFile('featured_image')) {
-            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'), config('soda.blog.field_params.featured_image.intervention'));
+            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'), config('soda.blog.field_params.featured_image.intervention', []));
         }
 
         // Save post to the database

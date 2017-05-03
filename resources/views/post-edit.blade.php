@@ -1,17 +1,5 @@
 @extends(soda_cms_view_path('layouts.inner'))
 
-@section('breadcrumb')
-    <ol class="breadcrumb">
-        <li><a href="{{ route('soda.home') }}">Home</a></li>
-        <li><a href="{{ route('soda.cms.blog.index') }}">{{ ucfirst(trans('soda-blog::general.blog')) }}</a></li>
-        <li class="active">Editing {{ ucfirst(trans('soda-blog::general.post')) }}</li>
-    </ol>
-@stop
-
-@section('head.title')
-    <title>Editing {{ ucfirst(trans('soda-blog::general.post')) }}</title>
-@endsection
-
 @section('content-heading-button')
     @include(soda_cms_view_path('partials.buttons.save'), ['submits' => '#post-form'])
     <button class="btn btn-success btn-lg" data-submits="#post-form" data-publishes>
@@ -19,11 +7,6 @@
         <span>Save and publish</span>
     </button>
 @stop
-
-@include(soda_cms_view_path('partials.heading'), [
-    'icon'        => 'fa fa-book',
-    'title'       => 'Editing ' . ucfirst(trans('soda-blog::general.post')),
-])
 
 @section('content')
 
@@ -42,7 +25,7 @@
         {!! csrf_field() !!}
         <div class="row">
 
-            <div class="col-lg-3 pull-right col-xs-12">
+            <div class="col-xs-12">
                 <div class="content-block">
                     {!! app('soda.form')->text([
                         'name'         => 'Title',
@@ -62,11 +45,10 @@
                     {!! app('soda.form')->toggle([
                         'name'         => 'Published',
                         'field_name'   => 'status',
-                        'value'        => Soda\Cms\Support\Constants::STATUS_LIVE,
-                        'field_params' => ['checked-value' => Soda\Cms\Support\Constants::STATUS_LIVE, 'unchecked-value' => Soda\Cms\Support\Constants::STATUS_DRAFT],
-                    ])->setLayout(soda_cms_view_path('partials.inputs.layouts.stacked'))->setModel($post) !!}
+                        'value'        => Soda\Cms\Foundation\Constants::STATUS_LIVE,
+                        'field_params' => ['checked-value' => Soda\Cms\Foundation\Constants::STATUS_LIVE, 'unchecked-value' => Soda\Cms\Foundation\Constants::STATUS_DRAFT],
+                    ])->setModel($post) !!}
 
-                    {{-- CONFIGURE TIMEZONE --}}
                     {!! app('soda.form')->datetime([
                         'name'         => 'Publish at',
                         'field_name'   => 'published_at',
@@ -74,12 +56,10 @@
                         'field_params' => [
                             'timezone' => config('soda.blog.publish_timezone'),
                         ]
-                    ])->setLayout(soda_cms_view_path('partials.inputs.layouts.stacked'))->setModel($post) !!}
-                </div>
-                <br />
-            </div>
-            <div class="col-lg-9 col-xs-12">
-                <div class="content-block">
+                    ])->setModel($post) !!}
+
+                    <hr />
+
                     {!! app('soda.form')->upload([
                         'name'         => 'Featured image',
                         'field_name'   => 'featured_image',

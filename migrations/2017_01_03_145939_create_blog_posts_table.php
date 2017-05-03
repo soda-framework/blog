@@ -12,6 +12,7 @@ class CreateBlogPostsTable extends Migration
      */
     public function up()
     {
+        Schema::defaultStringLength(191);
         Schema::create('blog_posts', function (Blueprint $table) {
             $table->engine = 'MyISAM';
 
