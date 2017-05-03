@@ -5,10 +5,10 @@ namespace Soda\Blog\Http\Controllers;
 use Carbon\Carbon;
 use Soda\Blog\Models\Tag;
 use Soda\Blog\Models\Post;
-use Soda\Cms\Database\Models\Field;
 use Illuminate\Http\Request;
 use Soda\Blog\Models\PostSetting;
 use Illuminate\Routing\Controller;
+use Soda\Cms\Database\Models\Field;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Soda\Cms\Foundation\Uploads\Uploader;
@@ -43,7 +43,7 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
-        app('soda.interface')->setHeading(ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
+        app('soda.interface')->setHeading(ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
         $sort = $request->input('sort');
         $search = $request->input('search');
         $status = $request->input('status');
@@ -80,7 +80,7 @@ class BlogController extends Controller
 
     public function create()
     {
-        app('soda.interface')->setHeading('New ' . ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
+        app('soda.interface')->setHeading('New '.ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
 
         return view('soda-blog::post-edit', [
             'blog'     => $this->currentBlog,
@@ -91,7 +91,7 @@ class BlogController extends Controller
 
     public function edit($id)
     {
-        app('soda.interface')->setHeading('Editing ' . ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
+        app('soda.interface')->setHeading('Editing '.ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
         $post = $this->currentBlog->posts()->with('blog.postDefaultSettings.field', 'settings.field')->findOrFail($id);
 
         return view('soda-blog::post-edit', [
