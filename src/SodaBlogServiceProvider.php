@@ -64,7 +64,6 @@ class SodaBlogServiceProvider extends ServiceProvider
             }
         }
 
-
         app('soda.drafting')->registerDraftables([Post::class]);
 
         parent::boot();
