@@ -1,4 +1,4 @@
-@extends('cms::default.layout')
+@extends('soda-blog::default.layout')
 
 @section('header')
     <title>Default {{ ucfirst(config('bootleg.blog.title_singular', 'blog')) }} Theme</title>

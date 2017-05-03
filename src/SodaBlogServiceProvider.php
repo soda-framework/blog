@@ -66,6 +66,7 @@ class SodaBlogServiceProvider extends ServiceProvider
 
 
         app('soda.drafting')->registerDraftables([Post::class]);
+        app('soda.request-matcher')->registerMatcher(SluggedBlogPostMatcher::class);
 
         parent::boot();
     }
