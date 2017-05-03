@@ -48,7 +48,7 @@
                         'value'        => Soda\Cms\Foundation\Constants::STATUS_LIVE,
                         'field_params' => ['checked-value' => Soda\Cms\Foundation\Constants::STATUS_LIVE, 'unchecked-value' => Soda\Cms\Foundation\Constants::STATUS_DRAFT],
                     ])->setModel($post) !!}
-                    
+
                     {!! app('soda.form')->datetime([
                         'name'         => 'Publish at',
                         'field_name'   => 'published_at',

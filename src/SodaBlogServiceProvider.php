@@ -55,7 +55,7 @@ class SodaBlogServiceProvider extends ServiceProvider
 
                     $menu->addItem('Blog', [
                         'url'         => route('soda.cms.blog.index'),
-                        'label'       => ucfirst(trans('soda-blog::general.posts')),
+                        'label'       => ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')),
                         'icon'      => 'fa fa-book',
                         'isCurrent'   => soda_request_is(trim($blog_cms_slug, '/').'*') && ! soda_request_is(trim($blog_cms_slug, '/').'/settings*') && ! soda_request_is(trim($blog_cms_slug, '/').'/import*'),
                         'permissions' => 'manage-blog',

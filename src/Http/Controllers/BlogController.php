@@ -8,10 +8,10 @@ use Soda\Blog\Models\Post;
 use Soda\Cms\Database\Models\Field;
 use Illuminate\Http\Request;
 use Soda\Blog\Models\PostSetting;
-use Soda\Cms\Foundation\Uploader;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Soda\Cms\Foundation\Uploads\Uploader;
 
 class BlogController extends Controller
 {
@@ -148,7 +148,7 @@ class BlogController extends Controller
         }
 
         if ($request->hasFile('featured_image')) {
-            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'), config('soda.blog.field_params.featured_image.intervention'));
+            $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'), config('soda.blog.field_params.featured_image.intervention', []));
         }
 
         // Save post to the database
