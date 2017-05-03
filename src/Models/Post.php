@@ -2,6 +2,7 @@
 
 namespace Soda\Blog\Models;
 
+use Carbon\Carbon;
 use Soda\Cms\Database\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -228,5 +229,10 @@ class Post extends Model
     public function getPublishDate()
     {
         return $this->published_at->setTimezone(config('soda.blog.publish_timezone'));
+    }
+
+    public function isPublished()
+    {
+        return $this->status == 1 && Carbon::now() >= $this->published_at;
     }
 }

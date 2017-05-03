@@ -2,7 +2,7 @@
 
 @section('content-heading-button')
     @include(soda_cms_view_path('partials.buttons.save'), ['submits' => '#post-form'])
-    <button class="btn btn-success btn-lg" data-submits="#post-form" data-publishes>
+    <button class="btn btn-info btn-lg" data-submits="#post-form" data-publishes>
         <i class="fa fa-eye"></i>
         <span>Save and publish</span>
     </button>
@@ -12,12 +12,12 @@
 
     @if($post->id)
         <div class="alert alert-info">
-            @if(Carbon\Carbon::now() >= $post->published_at && $post->status == 1)
+            @if($post->isPublished())
                 This {{ trans('soda-blog::general.post') }} is live!
-            @elseif($post->status == 0)
-                This {{ trans('soda-blog::general.post') }} is in draft mode.
-            @else
+            @elseif($post->status == 1)
                 This {{ trans('soda-blog::general.post') }} will not appear live until the publish date.
+            @else
+                This {{ trans('soda-blog::general.post') }} is in draft mode.
             @endif
         </div>
     @endif
@@ -94,7 +94,7 @@
     </form>
     <div class="content-bottom">
         @include(soda_cms_view_path('partials.buttons.save'), ['submits' => '#post-form'])
-        <button class="btn btn-success btn-lg" data-submits="#post-form" data-publishes>
+        <button class="btn btn-info btn-lg" data-submits="#post-form" data-publishes>
             <i class="fa fa-eye"></i>
             <span>Save and publish</span>
         </button>

@@ -34,7 +34,7 @@
     </div>
 
     @if ($posts->count())
-        <div class="content-block full">
+        <div class="content-block">
             <table class="table table-striped middle">
                 <thead>
                 <tr>
@@ -62,6 +62,12 @@
                                 Slug
                             </a>
                         </th>
+                        <th width="140">
+                            <a href='?sort=status&direction={{ $dir }}'>
+                                <span class='glyphicon glyphicon-chevron-{{ Input::get('sort') == 'status' ? $d : '' }}'></span>
+                                Status
+                            </a>
+                        </th>
                         <th width="250">
                             <a href='?sort=published_at&direction={{ $dir }}'>
                                 <span class='glyphicon glyphicon-chevron-{{ Input::get('sort') == 'published_at' ? $d : '' }}'></span>
@@ -81,11 +87,17 @@
                             </td>
                             @endif
                             <td>
-                                <span class="{{ $post->status == \Soda\Cms\Support\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span>
                                 <span style="margin-left:5px">{{ $post->name }}</span>
                             </td>
-                            <td class="text-monospaced" style="font-size:12px">/{{ trim($blog->slug . $post->slug, '/') }}</td>
-                            <td>{{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.blog.publish_timezone'))->toDayDateTimeString() : '' }}</td>
+                            <td>
+                                <span class="text-monospaced" style="font-size:12px">/{{ trim($blog->slug . $post->slug, '/') }}</span>
+                            </td>
+                            <td>
+                                <span class="{{ $post->isPublished() == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span> <span>{{ $post->isPublished() == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'Draft' : 'Published' }}</span>
+                            </td>
+                            <td>
+                                {{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.blog.publish_timezone'))->toDayDateTimeString() : '' }}
+                            </td>
                             <td>
                                 <div class="option-buttons pull-right">
                                     <div style="display:inline-block;position:relative;">
