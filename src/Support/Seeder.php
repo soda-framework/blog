@@ -2,8 +2,8 @@
 
 namespace Soda\Blog\Support;
 
-use Soda\Cms\Models\Role;
-use Soda\Cms\Models\Permission;
+use Soda\Cms\Database\Models\Role;
+use Soda\Cms\Database\Models\Permission;
 use Illuminate\Database\Seeder as BaseSeeder;
 
 class Seeder extends BaseSeeder
@@ -46,7 +46,7 @@ class Seeder extends BaseSeeder
         $developerRole = Role::whereName('developer')->first();
 
         if ($developerRole) {
-            $developerRole->attachPermissions([$permission_develop_blog]);
+            $developerRole->attachPermissions([$permission_develop_blog, $permission_manage_blog, $permission_admin_blog]);
         }
 
         $adminRole = Role::whereName('admin')->first();

@@ -12,8 +12,9 @@ class AddIndexesToBlogPostsTable extends Migration
      */
     public function up()
     {
+        Schema::defaultStringLength(191);
         Schema::table('blog_posts', function (Blueprint $table) {
-            $table->index(['blog_id', 'slug', 'deleted_at', 'status', 'published_at']);
+            $table->index(['blog_id', 'slug', 'status']);
         });
     }
 
@@ -25,7 +26,7 @@ class AddIndexesToBlogPostsTable extends Migration
     public function down()
     {
         Schema::table('blog_posts', function (Blueprint $table) {
-            $table->dropIndex(['blog_id', 'slug', 'deleted_at', 'status', 'published_at']);
+            $table->dropIndex(['blog_id', 'slug', 'status']);
         });
     }
 }
