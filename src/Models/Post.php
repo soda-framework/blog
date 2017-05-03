@@ -3,15 +3,15 @@
 namespace Soda\Blog\Models;
 
 use Carbon\Carbon;
-use Soda\Cms\Database\Models\User;
 use Illuminate\Support\Facades\DB;
+use Soda\Cms\Database\Models\User;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Soda\Cms\Database\Models\Traits\HasMedia;
+use Soda\Blog\Models\Traits\BlogSortableTrait;
 use Soda\Cms\Database\Models\Traits\Draftable;
 use Soda\Cms\Database\Models\Traits\Sluggable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Soda\Blog\Models\Traits\BlogSortableTrait;
 
 class Post extends Model
 {

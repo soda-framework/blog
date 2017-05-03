@@ -2,9 +2,9 @@
 
 namespace Soda\Blog;
 
-use Illuminate\Contracts\Routing\Registrar as RouterContract;
 use Illuminate\Http\Request;
 use Soda\Cms\Http\RequestMatcher\Matchers\MatcherInterface;
+use Illuminate\Contracts\Routing\Registrar as RouterContract;
 
 class SluggedBlogPostMatcher implements MatcherInterface
 {
@@ -22,7 +22,7 @@ class SluggedBlogPostMatcher implements MatcherInterface
     {
         $blogSlug = trim($this->currentBlog->slug, '/');
         $postSlug = trim($slug, '/');
-        $postSlug = '/' . trim(substr($postSlug, strlen($blogSlug), strlen($postSlug)), '/');
+        $postSlug = '/'.trim(substr($postSlug, strlen($blogSlug), strlen($postSlug)), '/');
 
         $this->match = $this->currentBlog->posts()->with('tags', 'author', 'settings')->where('slug', $postSlug)->first();
 
