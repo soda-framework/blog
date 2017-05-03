@@ -25,25 +25,25 @@
     <div class="content-block">
         <form id="blog-settings-form" method="POST">
             {!! csrf_field() !!}
-            {!! SodaForm::text([
+            {!! app('soda.form')->text([
                 'name'        => 'Name',
                 'field_name'  => 'name',
             ])->setLayout(soda_cms_view_path('partials.inputs.layouts.inline'))->setModel($blog) !!}
 
-            {!! SodaForm::text([
+            {!! app('soda.form')->text([
                 'name'        => 'Base slug',
                 'field_name'  => 'slug',
                 'description' => 'Base slug for ' . trans('soda-blog::general.blog') . ' ' . trans('soda-blog::general.posts')
             ])->setLayout(soda_cms_view_path('partials.inputs.layouts.inline'))->setModel($blog) !!}
 
             @permission('develop-blog')
-            {!! SodaForm::text([
+            {!! app('soda.form')->text([
                 'name'        => 'Single view',
                 'field_name'  => 'single_view',
                 'description' => 'View used for single ' . trans('soda-blog::general.blog') . ' ' . trans('soda-blog::general.posts')
             ])->setLayout(soda_cms_view_path('partials.inputs.layouts.inline'))->setModel($blog) !!}
 
-            {!! SodaForm::text([
+            {!! app('soda.form')->text([
                 'name'        => 'List view',
                 'field_name'  => 'list_view',
                 'description' => 'View used for ' . trans('soda-blog::general.blog') . ' ' . trans('soda-blog::general.post') . ' listings'
@@ -52,26 +52,26 @@
 
             <hr />
 
-            {!! SodaForm::toggle([
+            {!! app('soda.form')->toggle([
                 'name'        => 'RSS feed enabled',
                 'field_name'  => 'rss_enabled',
                 'description' => 'Toggle Atom RSS feed usage'
             ])->setLayout(soda_cms_view_path('partials.inputs.layouts.inline'))->setModel($blog) !!}
 
-            {!! SodaForm::text([
+            {!! app('soda.form')->text([
                 'name'        => 'RSS slug',
                 'field_name'  => 'rss_slug',
                 'description' => 'URL to access RSS feed. Appended to base slug defined above.'
             ])->setLayout(soda_cms_view_path('partials.inputs.layouts.inline'))->setModel($blog) !!}
 
             @permission('develop-blog')
-            {!! SodaForm::text([
+            {!! app('soda.form')->text([
                 'name'        => 'RSS view',
                 'field_name'  => 'rss_view',
                 'description' => 'View used for RSS feed'
             ])->setLayout(soda_cms_view_path('partials.inputs.layouts.inline'))->setModel($blog) !!}
 
-            {!! SodaForm::toggle([
+            {!! app('soda.form')->toggle([
                 'name'        => 'Strip tags',
                 'field_name'  => 'rss_strip_tags',
                 'description' => 'Strip HTML from RSS output'

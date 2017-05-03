@@ -44,13 +44,13 @@
 
             <div class="col-lg-3 pull-right col-xs-12">
                 <div class="content-block">
-                    {!! SodaForm::text([
+                    {!! app('soda.form')->text([
                         'name'         => 'Title',
                         'field_name'   => 'name',
                         'field_params' => config('soda.blog.field_params.name'),
                     ])->setLayout(soda_cms_view_path('partials.inputs.layouts.stacked'))->setModel($post) !!}
 
-                    {!! SodaForm::slug([
+                    {!! app('soda.form')->slug([
                         'name'        => 'Slug',
                         'description' => 'The URL to reach this ' . trans('soda-blog::general.post'),
                         'field_name'  => 'slug',
@@ -59,7 +59,7 @@
                         ],
                     ])->setLayout(soda_cms_view_path('partials.inputs.layouts.stacked'))->setModel($post) !!}
 
-                    {!! SodaForm::toggle([
+                    {!! app('soda.form')->toggle([
                         'name'         => 'Published',
                         'field_name'   => 'status',
                         'value'        => Soda\Cms\Support\Constants::STATUS_LIVE,
@@ -67,7 +67,7 @@
                     ])->setLayout(soda_cms_view_path('partials.inputs.layouts.stacked'))->setModel($post) !!}
 
                     {{-- CONFIGURE TIMEZONE --}}
-                    {!! SodaForm::datetime([
+                    {!! app('soda.form')->datetime([
                         'name'         => 'Publish at',
                         'field_name'   => 'published_at',
                         'description'  => 'Note: ' . trans('soda-blog::general.post') . ' must be published with toggle above for date to take affect',
@@ -80,19 +80,19 @@
             </div>
             <div class="col-lg-9 col-xs-12">
                 <div class="content-block">
-                    {!! SodaForm::upload([
+                    {!! app('soda.form')->upload([
                         'name'         => 'Featured image',
                         'field_name'   => 'featured_image',
                         'field_params' => config('soda.blog.field_params.featured_image'),
                     ])->setModel($post) !!}
 
-                    {!! SodaForm::tinymce([
+                    {!! app('soda.form')->tinymce([
                         'name'         => ucfirst(trans('soda-blog::general.post')) . ' body',
                         'field_name'   => 'content',
                         'field_params' => config('soda.blog.field_params.content'),
                     ])->setModel($post) !!}
 
-                    {!! SodaForm::combobox([
+                    {!! app('soda.form')->combobox([
                         'name'        => 'Tags',
                         'field_name'  => 'singletags',
                         'field_params' => array_merge([
@@ -105,7 +105,7 @@
                     @if(count($settings))
                         <hr />
                         @foreach($settings as $setting)
-                            {!! SodaForm::field($setting->field)->setPrefix('setting.'.$setting->field->id)->setModel($post) !!}
+                            {!! app('soda.form')->field($setting->field)->setPrefix('setting.'.$setting->field->id)->setModel($post) !!}
                         @endforeach
                     @endif
                 </div>

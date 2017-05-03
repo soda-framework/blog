@@ -128,7 +128,7 @@ class BlogController extends Controller
 
         // Format the publish date to the correct timezone
         if ($request->input('published_at')) {
-            $post->published_at = \SodaForm::datetime([
+            $post->published_at = \app('soda.form')->datetime([
                 'field_name'   => 'published_at',
                 'field_params' => [
                     'timezone' => config('soda.blog.publish_timezone'),
@@ -171,7 +171,7 @@ class BlogController extends Controller
                         'name'     => $settingName,
                         'field_id' => $fieldId,
                     ])->fill([
-                        'value' => \SodaForm::field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request),
+                        'value' => \app('soda.form')->field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request),
                     ]);
 
                     $post->settings()->save($settingModel);
