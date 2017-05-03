@@ -3,6 +3,7 @@
 namespace Soda\Blog\Models;
 
 use Carbon\Carbon;
+use Soda\Blog\Models\Traits\BoundToBlog;
 use Soda\Cms\Database\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -15,7 +16,7 @@ use Soda\Blog\Models\Traits\BlogSortableTrait;
 
 class Post extends Model
 {
-    use SoftDeletes, BlogSortableTrait, Draftable, Sluggable, HasMedia;
+    use BoundToBlog, SoftDeletes, BlogSortableTrait, Draftable, Sluggable, HasMedia;
 
     public $table = 'blog_posts';
     public $fillable = [

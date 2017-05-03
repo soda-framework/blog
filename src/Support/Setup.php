@@ -6,7 +6,7 @@ use Soda\Cms\Database\Models\Role;
 use Soda\Cms\Database\Models\Permission;
 use Illuminate\Database\Seeder as BaseSeeder;
 
-class Seeder extends BaseSeeder
+class Setup extends BaseSeeder
 {
     /**
      * Auto generated seed file.

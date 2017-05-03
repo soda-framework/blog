@@ -13,19 +13,20 @@ class Blog extends Model
     use SoftDeletes, OptionallyBoundToApplication;
     public $table = 'blog';
     public $fillable = [
-        'name',
-        'slug',
+        'application_id',
         'single_view',
         'list_view',
-        'rss_enabled',
-        'rss_slug',
         'rss_view',
-        'rss_strip_tags',
     ];
 
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function getSetting($name)
+    {
+        return app('soda')->getApplication()->getSetting('blog_' . $name);
     }
 
     public function postDefaultSettings()

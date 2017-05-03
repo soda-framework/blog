@@ -1,7 +1,8 @@
 <?php
-// Get current URL
+$blogName = $blog->getSetting('name');
+$baseUrl = URL::to($blog->getSetting('slug'));
+
 $currentUrl = URL::current();
-$baseUrl = URL::to($blog->slug);
 
 $atomId = preg_replace('#^https?://#', '', rtrim($currentUrl,'/')); // Remove http
 $atomId = str_replace('www.', '', $atomId); // Remove www.
@@ -13,8 +14,8 @@ $lastUpdated = $posts->max('updated_at');
 
 {!! '<?xml version="1.0" encoding="UTF-8"?>' !!}
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <title>{{ strip_tags($blog->name) }}</title>
-    <subtitle>{{ strip_tags($blog->name) }}</subtitle>
+    <title>{{ strip_tags($blogName) }}</title>
+    <subtitle>{{ strip_tags($blogName) }}</subtitle>
     <link href="{{ route('soda.blog.rss') }}" rel="self" />
     <link href="{{ $baseUrl }}" />
     <id>{{ atom_url($currentUrl) }}</id>
@@ -33,7 +34,7 @@ $lastUpdated = $posts->max('updated_at');
             @endif
 
             @if($post->content)
-                @if(config('soda.blog.rss.strip_tags'))
+                @if($blog->getSetting('rss_strip_tags'))
                     <content>{{ strip_tags($post->content) }}</content>
                 @else
                     <content type="xhtml">

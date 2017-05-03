@@ -40,7 +40,7 @@ class FrontendController
         // Disable debugbar as it breaks the XML format
         Config::set('debugbar.enabled', false);
 
-        $posts = $this->currentBlog->posts()->with('tags', 'author')->take(20)->get();
+        $posts = $this->currentBlog->posts()->with('tags', 'author')->paginate(20);
 
         return response()->view($this->currentBlog->rss_view, [
             'blog'  => $this->currentBlog,

@@ -27,20 +27,6 @@ class BlogController extends Controller
         app('soda.interface')->breadcrumbs()->addLink(route('soda.home'), 'Home');
     }
 
-    public function settings()
-    {
-        return view('soda-blog::blog-settings', [
-            'blog' => $this->currentBlog,
-        ]);
-    }
-
-    public function saveSettings(Request $request)
-    {
-        $this->currentBlog->fill($request->input())->save();
-
-        return redirect()->route('soda.cms.blog.settings')->with('success', 'Blog updated successfully');
-    }
-
     public function index(Request $request)
     {
         app('soda.interface')->setHeading(ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));

@@ -20,7 +20,7 @@ class SluggedBlogPostMatcher implements MatcherInterface
 
     public function matches($slug)
     {
-        $blogSlug = trim($this->currentBlog->slug, '/');
+        $blogSlug = trim($this->currentBlog->getSetting('slug'), '/');
         $postSlug = trim($slug, '/');
         $postSlug = '/' . trim(substr($postSlug, strlen($blogSlug), strlen($postSlug)), '/');
 

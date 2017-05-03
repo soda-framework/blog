@@ -4,11 +4,11 @@ if (! function_exists('blog_slug')) {
     function blog_slug($slug)
     {
         $blog = app('CurrentBlog');
-        if ($blog->slug == '/') {
-            $blog->slug = '';
-        }
 
-        $slug = '/'.$blog->slug.'/'.$slug;
+        $blogSlug = $blog->getSetting('slug');
+        $blogSlug = $blogSlug == '/' ? '' : $blogSlug;
+
+        $slug = '/'.trim($blogSlug, '/').'/'.$slug;
 
         return preg_replace('#/+#', '/', $slug);
     }

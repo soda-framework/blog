@@ -4,10 +4,10 @@ namespace Soda\Blog\Console;
 
 use Illuminate\Console\Command;
 
-class Seed extends Command
+class Setup extends Command
 {
-    protected $signature = 'soda:blog:seed';
-    protected $description = 'Seed the Soda Blog Database';
+    protected $signature = 'soda:blog:setup';
+    protected $description = 'Set up the Soda Blog Database';
 
     /**
      * Runs seeds for Soda Reports.
@@ -15,7 +15,7 @@ class Seed extends Command
     public function handle()
     {
         $this->call('db:seed', [
-            '--class' => 'Soda\\Blog\\Support\\Seeder',
+            '--class' => 'Soda\\Blog\\Support\\Setup',
         ]);
     }
 }

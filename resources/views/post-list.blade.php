@@ -90,7 +90,7 @@
                                 <span style="margin-left:5px">{{ $post->name }}</span>
                             </td>
                             <td>
-                                <span class="text-monospaced" style="font-size:12px">/{{ trim($blog->slug . $post->slug, '/') }}</span>
+                                <span class="text-monospaced" style="font-size:12px">/{{ trim($blog->getSetting('slug') . $post->slug, '/') }}</span>
                             </td>
                             <td>
                                 <span class="{{ $post->isPublished() == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span> <span>{{ $post->isPublished() == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'Draft' : 'Published' }}</span>

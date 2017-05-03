@@ -4,7 +4,8 @@ namespace Soda\Blog;
 
 use Soda\Blog\Models\Blog;
 use Soda\Blog\Models\Post;
-use Soda\Blog\Console\Seed;
+use Soda\Blog\Console\Setup;
+use Soda\Blog\Console\Create;
 use Soda\Blog\Console\Migrate;
 use Illuminate\Support\Facades\Route;
 use Soda\Cms\Support\Facades\SodaFacade as Soda;
@@ -82,7 +83,8 @@ class SodaBlogServiceProvider extends ServiceProvider
 
         $this->commands([
             Migrate::class,
-            Seed::class,
+            Create::class,
+            Setup::class
         ]);
 
         $this->app->singleton('CurrentBlog', function () {
