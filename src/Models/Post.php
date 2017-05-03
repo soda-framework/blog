@@ -2,19 +2,19 @@
 
 namespace Soda\Blog\Models;
 
-use Soda\Cms\Models\User;
+use Soda\Cms\Database\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
-use Soda\Cms\Models\Traits\HasMediaTrait;
-use Soda\Cms\Models\Traits\DraftableTrait;
-use Soda\Cms\Models\Traits\SluggableTrait;
+use Soda\Cms\Database\Models\Traits\HasMedia;
+use Soda\Cms\Database\Models\Traits\Draftable;
+use Soda\Cms\Database\Models\Traits\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Soda\Blog\Models\Traits\BlogSortableTrait;
 
 class Post extends Model
 {
-    use SoftDeletes, BlogSortableTrait, DraftableTrait, SluggableTrait, HasMediaTrait;
+    use SoftDeletes, BlogSortableTrait, Draftable, Sluggable, HasMedia;
 
     public $table = 'blog_posts';
     public $fillable = [

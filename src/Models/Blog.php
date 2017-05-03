@@ -6,11 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Soda\Cms\Models\Traits\OptionallyInApplicationTrait;
+use Soda\Cms\Database\Models\Traits\OptionallyBoundToApplication;
 
 class Blog extends Model
 {
-    use SoftDeletes, OptionallyInApplicationTrait;
+    use SoftDeletes, OptionallyBoundToApplication;
     public $table = 'blog';
     public $fillable = [
         'name',
