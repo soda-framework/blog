@@ -26,7 +26,7 @@ class Blog extends Model
 
     public function getSetting($name)
     {
-        return app('soda')->getApplication()->getSetting('blog_' . $name);
+        return app('soda')->getApplication()->getSetting('blog_'.$name);
     }
 
     public function postDefaultSettings()

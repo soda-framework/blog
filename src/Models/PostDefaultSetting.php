@@ -2,9 +2,9 @@
 
 namespace Soda\Blog\Models;
 
-use Soda\Blog\Models\Traits\BoundToBlog;
 use Soda\Cms\Database\Models\Field;
 use Illuminate\Database\Eloquent\Model;
+use Soda\Blog\Models\Traits\BoundToBlog;
 
 class PostDefaultSetting extends Model
 {
