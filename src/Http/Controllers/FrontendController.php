@@ -17,6 +17,7 @@ class FrontendController
     {
         return view($this->currentBlog->list_view, [
             'blog'  => $this->currentBlog,
+            'posts' => $this->currentBlog->posts()
         ]);
     }
 

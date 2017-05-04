@@ -162,10 +162,10 @@ class Post extends Model
         $currentBlog = app('CurrentBlog');
 
         if ($currentBlog->id == $this->blog_id) {
-            return URL::to($currentBlog->slug.'/'.trim($this->slug, '/'));
+            return URL::to($currentBlog->getSetting('slug').'/'.trim($this->slug, '/'));
         }
 
-        return URL::to($this->blog->slug.'/'.trim($this->slug, '/'));
+        return URL::to($this->blog->getSetting('slug').'/'.trim($this->slug, '/'));
     }
 
     public function getPreviousPost()
