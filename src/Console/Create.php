@@ -2,8 +2,8 @@
 
 namespace Soda\Blog\Console;
 
-use Illuminate\Console\Command;
 use Soda\Blog\Models\Blog;
+use Illuminate\Console\Command;
 use Soda\Cms\Database\Models\Application;
 use Soda\Cms\Database\Models\ApplicationSetting;
 
@@ -19,7 +19,7 @@ class Create extends Command
     {
         $applications = Application::with('urls')->get(['id', 'name']);
 
-        if (!$applications) {
+        if (! $applications) {
             $this->error('No applications found.');
 
             return;
@@ -38,10 +38,10 @@ class Create extends Command
         do {
             $applicationChoice = $this->ask('Which application would you like to create a blog for? (enter ID)', $applications->first()->id);
 
-            if (!in_array($applicationChoice, $applications->pluck('id')->toArray())) {
+            if (! in_array($applicationChoice, $applications->pluck('id')->toArray())) {
                 $this->error('No application with ID '.$applicationChoice);
             }
-        } while (!in_array($applicationChoice, $applications->pluck('id')->toArray()));
+        } while (! in_array($applicationChoice, $applications->pluck('id')->toArray()));
 
         $application = $applications->where('id', $applicationChoice)->first();
         $existingBlog = Blog::withoutGlobalScope('in-application')->firstOrNew(['application_id' => $application->id]);
