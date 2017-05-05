@@ -5,13 +5,13 @@ namespace Soda\Blog\Http\Controllers;
 use Carbon\Carbon;
 use Soda\Blog\Models\Tag;
 use Soda\Blog\Models\Post;
-use Soda\Cms\Database\Models\Field;
 use Illuminate\Http\Request;
 use Soda\Blog\Models\PostSetting;
 use Illuminate\Routing\Controller;
+use Soda\Cms\Database\Models\Field;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Soda\Cms\Foundation\Uploads\Uploader;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class BlogController extends Controller
 {
@@ -29,7 +29,7 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
-        app('soda.interface')->setHeading(ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
+        app('soda.interface')->setHeading(ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
         $sort = $request->input('sort');
         $search = $request->input('search');
         $status = $request->input('status');
@@ -66,7 +66,7 @@ class BlogController extends Controller
 
     public function create()
     {
-        app('soda.interface')->setHeading('New ' . ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
+        app('soda.interface')->setHeading('New '.ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
 
         return view('soda-blog::post-edit', [
             'blog' => $this->currentBlog,
@@ -77,7 +77,7 @@ class BlogController extends Controller
 
     public function edit($id)
     {
-        app('soda.interface')->setHeading('Editing ' . ucfirst(trans('soda-blog::general.blog')) . ' ' . ucfirst(trans('soda-blog::general.posts')));
+        app('soda.interface')->setHeading('Editing '.ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
         $post = $this->currentBlog->posts()->with('blog.postDefaultSettings.field', 'settings.field')->findOrFail($id);
 
         return view('soda-blog::post-edit', [
@@ -105,7 +105,7 @@ class BlogController extends Controller
         ]));
 
         // Only make changes if this post is newly created
-        if (!$post->id) {
+        if (! $post->id) {
             // Set the post author
             $post->user_id = Auth::user()->id;
 
@@ -129,7 +129,7 @@ class BlogController extends Controller
             ])->getSaveValue($request);
         }
 
-        if (!$post->published_at) {
+        if (! $post->published_at) {
             $post->published_at = Carbon::now();
         }
 
@@ -164,7 +164,7 @@ class BlogController extends Controller
                         'name' => $settingName,
                         'field_id' => $fieldId,
                     ])->fill([
-                        'value' => \app('soda.form')->field($field)->setPrefix('setting.' . $field->id)->getSaveValue($request),
+                        'value' => \app('soda.form')->field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request),
                     ]);
 
                     $post->settings()->save($settingModel);
@@ -172,7 +172,7 @@ class BlogController extends Controller
             }
         }
 
-        return redirect()->route('soda.cms.blog.edit', $post->id)->with('success', ucfirst(trans('soda-blog::general.post')) . ' updated successfully');
+        return redirect()->route('soda.cms.blog.edit', $post->id)->with('success', ucfirst(trans('soda-blog::general.post')).' updated successfully');
     }
 
     public function delete($id)
@@ -182,7 +182,7 @@ class BlogController extends Controller
         $post->tags()->detach();
         $post->delete();
 
-        return redirect()->route('soda.cms.blog.index')->with('success', ucfirst(trans('soda-blog::general.post')) . ' deleted');
+        return redirect()->route('soda.cms.blog.index')->with('success', ucfirst(trans('soda-blog::general.post')).' deleted');
     }
 
     protected function getPostSettings(Post $post)
