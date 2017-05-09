@@ -105,7 +105,7 @@ class BlogController extends Controller
         ]));
 
         // Only make changes if this post is newly created
-        if (!$post->id) {
+        if (! $post->id) {
             // Set the post author
             $post->user_id = Auth::user()->id;
 
@@ -129,7 +129,7 @@ class BlogController extends Controller
             ])->getSaveValue($request);
         }
 
-        if (!$post->published_at) {
+        if (! $post->published_at) {
             $post->published_at = Carbon::now();
         }
 
@@ -164,7 +164,7 @@ class BlogController extends Controller
                         'name' => $settingName,
                         'field_id' => $fieldId,
                     ])->fill([
-                        'value' => \app('soda.form')->field($field)->setPrefix('setting.' . $field->id)->getSaveValue($request),
+                        'value' => \app('soda.form')->field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request),
                     ]);
 
                     $post->settings()->save($settingModel);
@@ -172,7 +172,7 @@ class BlogController extends Controller
             }
         }
 
-        return redirect()->route('soda.cms.blog.edit', $post->id)->with('success', ucfirst(trans('soda-blog::general.post')) . ' updated successfully');
+        return redirect()->route('soda.cms.blog.edit', $post->id)->with('success', ucfirst(trans('soda-blog::general.post')).' updated successfully');
     }
 
     public function delete($id)
@@ -182,7 +182,7 @@ class BlogController extends Controller
         $post->tags()->detach();
         $post->delete();
 
-        return redirect()->route('soda.cms.blog.index')->with('success', ucfirst(trans('soda-blog::general.post')) . ' deleted');
+        return redirect()->route('soda.cms.blog.index')->with('success', ucfirst(trans('soda-blog::general.post')).' deleted');
     }
 
     protected function getPostSettings(Post $post)
