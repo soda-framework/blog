@@ -59,7 +59,7 @@ class BlogController extends Controller
         }
 
         return view('soda-blog::post-list', [
-            'blog' => $this->currentBlog,
+            'blog'  => $this->currentBlog,
             'posts' => $posts->paginate(),
         ]);
     }
@@ -69,8 +69,8 @@ class BlogController extends Controller
         app('soda.interface')->setHeading('New '.ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
 
         return view('soda-blog::post-edit', [
-            'blog' => $this->currentBlog,
-            'post' => new Post(['status' => 0]),
+            'blog'     => $this->currentBlog,
+            'post'     => new Post(['status' => 0]),
             'settings' => $this->currentBlog->postDefaultSettings,
         ]);
     }
@@ -81,8 +81,8 @@ class BlogController extends Controller
         $post = $this->currentBlog->posts()->with('blog.postDefaultSettings.field', 'settings.field')->findOrFail($id);
 
         return view('soda-blog::post-edit', [
-            'blog' => $this->currentBlog,
-            'post' => $post,
+            'blog'     => $this->currentBlog,
+            'post'     => $post,
             'settings' => $this->getPostSettings($post),
         ]);
     }
@@ -105,7 +105,7 @@ class BlogController extends Controller
         ]));
 
         // Only make changes if this post is newly created
-        if (!$post->id) {
+        if (! $post->id) {
             // Set the post author
             $post->user_id = Auth::user()->id;
 
@@ -122,14 +122,14 @@ class BlogController extends Controller
         // Format the publish date to the correct timezone
         if ($request->input('published_at')) {
             $post->published_at = \app('soda.form')->datetime([
-                'field_name' => 'published_at',
+                'field_name'   => 'published_at',
                 'field_params' => [
                     'timezone' => config('soda.blog.publish_timezone'),
                 ],
             ])->getSaveValue($request);
         }
 
-        if (!$post->published_at) {
+        if (! $post->published_at) {
             $post->published_at = Carbon::now();
         }
 
@@ -160,11 +160,11 @@ class BlogController extends Controller
 
                 foreach ($settings as $settingName => $settingValue) {
                     $settingModel = PostSetting::firstOrNew([
-                        'post_id' => $post->id,
-                        'name' => $settingName,
+                        'post_id'  => $post->id,
+                        'name'     => $settingName,
                         'field_id' => $fieldId,
                     ])->fill([
-                        'value' => \app('soda.form')->field($field)->setPrefix('setting.' . $field->id)->getSaveValue($request),
+                        'value' => \app('soda.form')->field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request),
                     ]);
 
                     $post->settings()->save($settingModel);
@@ -172,7 +172,7 @@ class BlogController extends Controller
             }
         }
 
-        return redirect()->route('soda.cms.blog.edit', $post->id)->with('success', ucfirst(trans('soda-blog::general.post')) . ' updated successfully');
+        return redirect()->route('soda.cms.blog.edit', $post->id)->with('success', ucfirst(trans('soda-blog::general.post')).' updated successfully');
     }
 
     public function delete($id)
@@ -182,7 +182,7 @@ class BlogController extends Controller
         $post->tags()->detach();
         $post->delete();
 
-        return redirect()->route('soda.cms.blog.index')->with('success', ucfirst(trans('soda-blog::general.post')) . ' deleted');
+        return redirect()->route('soda.cms.blog.index')->with('success', ucfirst(trans('soda-blog::general.post')).' deleted');
     }
 
     protected function getPostSettings(Post $post)
