@@ -93,10 +93,18 @@
                                 <span class="text-monospaced" style="font-size:12px">/{{ trim($blog->getSetting('slug') . $post->slug, '/') }}</span>
                             </td>
                             <td>
-                                <span class="{{ $post->isPublished() == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'inactive' : 'active' }}-circle"></span> <span>{{ $post->isPublished() == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'Draft' : 'Published' }}</span>
+                                @if($post->isPublished())
+                                    <span class="active-circle"></span> <span>Published</span>
+                                @else
+                                    <span class="inactive-circle"></span> <span>{{ $post->status == \Soda\Cms\Foundation\Constants::STATUS_DRAFT ? 'Draft' : 'Pending' }}</span>
+                                @endif
                             </td>
                             <td>
-                                {{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.blog.publish_timezone'))->toDayDateTimeString() : '' }}
+                                @if($post->isPublished())
+                                    {{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.blog.publish_timezone'))->toDayDateTimeString() : '' }}
+                                @else
+                                    -
+                                @endif
                             </td>
                             <td>
                                 <div class="option-buttons pull-right">
