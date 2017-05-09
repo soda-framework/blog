@@ -6,8 +6,7 @@ if ($blog->id) {
     $currentApplication = \Soda::getApplication();
     $blogCmsSlug = config('soda-blog.cms_slug', 'blog');
 
-    Route::group(['prefix' => config('soda.cms.path').'/'.trim($blogCmsSlug, '/'), 'middleware' => ['web', 'soda.auth']], function () use ($blog) {
-
+    Route::group(['prefix' => config('soda.cms.path').'/'.trim($blogCmsSlug, '/'), 'middleware' => ['web', 'soda.auth', 'soda.web']], function () use ($blog) {
         Route::get('/', 'BlogController@index')->name('soda.cms.blog.index');
         Route::get('create', 'BlogController@create')->name('soda.cms.blog.create');
         Route::get('edit/{id}', 'BlogController@edit')->name('soda.cms.blog.edit');

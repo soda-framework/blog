@@ -108,9 +108,11 @@
                                             <li>
                                                 <a href="{{ route('soda.cms.blog.edit', $post->id) }}">Edit {{ ucfirst(trans('soda-blog::general.post')) }}</a>
                                             </li>
+                                            @if($post->isPublished() || Session::get("soda.draft_mode") == true)
                                             <li>
-                                                <a href="{{ URL::to($blog->slug . '/' . trim($post->slug, '/')) }}" target="_blank" data-tree-link>View {{ ucfirst(trans('soda-blog::general.post')) }}</a>
+                                                <a href="{{ URL::to(trim($blog->getSetting('slug') . $post->slug, '/')) }}" target="_blank" data-tree-link>View {{ ucfirst(trans('soda-blog::general.post')) }}</a>
                                             </li>
+                                            @endif
                                             <li class="divider"></li>
                                             <li class="warning">
                                                 <a data-post-delete="{{ route('soda.cms.blog.delete', $post->id) }}" href="#">Delete</a>
@@ -169,8 +171,7 @@
 
 @section('footer.js')
     @parent
-    <link href="/soda/cms/css/extra.min.css" type="text/css"/>
-    <script src="/soda/cms/js/extra.min.js"></script>
+    <script src="/soda/cms/js/forms/sortable.js"></script>
     <script>
         $(document).on('ready', function () {
             $('select.filter').change(function (e) {
