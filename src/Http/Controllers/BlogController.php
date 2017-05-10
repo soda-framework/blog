@@ -3,15 +3,15 @@
 namespace Soda\Blog\Http\Controllers;
 
 use Carbon\Carbon;
-use Soda\Blog\Models\Tag;
-use Soda\Blog\Models\Post;
-use Illuminate\Http\Request;
-use Soda\Blog\Models\PostSetting;
-use Illuminate\Routing\Controller;
-use Soda\Cms\Database\Models\Field;
-use Illuminate\Support\Facades\Auth;
-use Soda\Cms\Foundation\Uploads\Uploader;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Soda\Blog\Models\Post;
+use Soda\Blog\Models\PostSetting;
+use Soda\Blog\Models\Tag;
+use Soda\Cms\Database\Models\Field;
+use Soda\Cms\Foundation\Uploads\Uploader;
 
 class BlogController extends Controller
 {
@@ -78,7 +78,8 @@ class BlogController extends Controller
     public function edit($id)
     {
         app('soda.interface')->setHeading('Editing '.ucfirst(trans('soda-blog::general.blog')).' '.ucfirst(trans('soda-blog::general.posts')));
-        $post = $this->currentBlog->posts()->with('blog.postDefaultSettings.field', 'settings.field')->findOrFail($id);
+        $post = $this->currentBlog->posts()->findOrFail($id);
+        $post->load('blog.postDefaultSettings.field', 'settings.field');
 
         return view('soda-blog::post-edit', [
             'blog'     => $this->currentBlog,
@@ -187,14 +188,20 @@ class BlogController extends Controller
 
     protected function getPostSettings(Post $post)
     {
-        $defaultSettings = $post->defaultSettings()->with('field')->get();
+        if(!$post->relationLoaded('defaultSettings')) {
+            $post->load('defaultSettings.field');
+        }
 
         $settings = collect();
 
         // Iterate over our default settings
         // We will fill an array of 'allSettings', containing values
         // for any settings we do have
-        foreach ($defaultSettings as $key => $defaultSetting) {
+        foreach ($post->defaultSettings as $key => $defaultSetting) {
+            if(!$defaultSetting->relationLoaded('field')) {
+                $defaultSetting->load('field');
+            }
+
             $existingSettings = $post->settings->filter(function ($setting) use ($defaultSetting) {
                 return $setting->name == $defaultSetting->name;
             });

@@ -3,16 +3,17 @@
 namespace Soda\Blog\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Soda\Cms\Database\Models\User;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
-use Soda\Blog\Models\Traits\BoundToBlog;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Soda\Cms\Database\Models\Traits\HasMedia;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Soda\Blog\Models\Traits\BlogSortableTrait;
+use Soda\Blog\Models\Traits\BoundToBlog;
+use Soda\Cms\Database\Models\DynamicContent;
 use Soda\Cms\Database\Models\Traits\Draftable;
+use Soda\Cms\Database\Models\Traits\HasMedia;
 use Soda\Cms\Database\Models\Traits\Sluggable;
+use Soda\Cms\Database\Models\User;
 
 class Post extends Model
 {
@@ -172,7 +173,7 @@ class Post extends Model
     {
         $query = static::where('id', '!=', $this->id);
 
-        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '<=' : '>=', $this->$sortableField);
 
             break;
@@ -185,7 +186,7 @@ class Post extends Model
     {
         $query = static::reverseOrder()->where('id', '!=', $this->id);
 
-        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '>=' : '<=', $this->$sortableField);
 
             break;
@@ -235,5 +236,20 @@ class Post extends Model
     public function isPublished()
     {
         return $this->status == 1 && Carbon::now() >= $this->published_at;
+    }
+
+    public function getPropertiesAttribute()
+    {
+        $propertiesModel = new DynamicContent;
+
+        foreach ($this->settings as $setting) {
+            if (!$setting->relationLoaded('field')) {
+                $this->settings->load('field');
+            }
+
+            $propertiesModel->setAttribute($setting->field->field_name, $setting->value);
+        }
+
+        return $propertiesModel;
     }
 }
