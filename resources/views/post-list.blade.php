@@ -145,27 +145,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        Confirmation
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete this item? This cannot be undone.
-                    </div>
-                    <div class="modal-footer">
-                        <form method="POST">
-                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button class="btn btn-danger btn-ok">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     @else
         <div class="content-block">
             There are no {{ trans('soda-blog::general.posts') }} to show
@@ -177,11 +156,35 @@
     @endif
 @endsection
 
+@section('modals')
+    @parent
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmation
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this item? This cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <form method="POST">
+                        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-danger btn-ok">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@stop
+
 @section('footer.js')
     @parent
     <script src="/soda/cms/js/forms/sortable.js"></script>
     <script>
-        $(document).on('ready', function () {
+        $(function () {
             $('select.filter').change(function (e) {
                 e.preventDefault();
                 $(this).closest('form').submit();
