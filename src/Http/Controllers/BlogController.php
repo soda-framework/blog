@@ -3,15 +3,15 @@
 namespace Soda\Blog\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Soda\Blog\Models\Post;
-use Soda\Blog\Models\PostSetting;
 use Soda\Blog\Models\Tag;
+use Soda\Blog\Models\Post;
+use Illuminate\Http\Request;
+use Soda\Blog\Models\PostSetting;
+use Illuminate\Routing\Controller;
 use Soda\Cms\Database\Models\Field;
+use Illuminate\Support\Facades\Auth;
 use Soda\Cms\Foundation\Uploads\Uploader;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class BlogController extends Controller
 {
@@ -188,7 +188,7 @@ class BlogController extends Controller
 
     protected function getPostSettings(Post $post)
     {
-        if(!$post->relationLoaded('defaultSettings')) {
+        if (! $post->relationLoaded('defaultSettings')) {
             $post->load('defaultSettings.field');
         }
 
@@ -198,7 +198,7 @@ class BlogController extends Controller
         // We will fill an array of 'allSettings', containing values
         // for any settings we do have
         foreach ($post->defaultSettings as $key => $defaultSetting) {
-            if(!$defaultSetting->relationLoaded('field')) {
+            if (! $defaultSetting->relationLoaded('field')) {
                 $defaultSetting->load('field');
             }
 
