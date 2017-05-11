@@ -153,10 +153,10 @@ class BlogController extends Controller
             $post->tags()->sync($tags->pluck('id')->toArray());
         }
 
-        if ($request->has('setting')) {
-            $fields = Field::whereIn('id', array_keys($request->input('setting')))->get()->keyBy('id');
+        if ($request->has('settings')) {
+            $fields = Field::whereIn('id', array_keys($request->input('settings')))->get()->keyBy('id');
 
-            foreach ($request->input('setting') as $fieldId => $settings) {
+            foreach ($request->input('settings') as $fieldId => $settings) {
                 $field = $fields->get($fieldId);
 
                 foreach ($settings as $settingName => $settingValue) {
@@ -165,7 +165,7 @@ class BlogController extends Controller
                         'name'     => $settingName,
                         'field_id' => $fieldId,
                     ])->fill([
-                        'value' => \app('soda.form')->field($field)->setPrefix('setting.'.$field->id)->getSaveValue($request),
+                        'value' => \app('soda.form')->field($field)->setPrefix('settings.'.$field->id)->getSaveValue($request),
                     ]);
 
                     $post->settings()->save($settingModel);
