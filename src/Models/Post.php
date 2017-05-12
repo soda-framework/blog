@@ -240,8 +240,9 @@ class Post extends Model
 
     public function getPropertiesAttribute()
     {
-        $propertiesModel = DynamicContent::fromTable($this->getTable());
+        $propertiesModel = new DynamicContent;
 
+        $propertiesModel->setTable($this->getTable());
         $propertiesModel->id = $this->id;
         $propertiesModel->exists = true;
 
