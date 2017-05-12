@@ -240,7 +240,10 @@ class Post extends Model
 
     public function getPropertiesAttribute()
     {
-        $propertiesModel = new DynamicContent;
+        $propertiesModel = DynamicContent::fromTable($this->getTable());
+
+        $propertiesModel->id = $this->id;
+        $propertiesModel->exists = true;
 
         foreach ($this->settings as $setting) {
             if (! $setting->relationLoaded('field')) {
