@@ -43,16 +43,16 @@ class InstallPermissions extends BaseSeeder
             $permission_manage_blog,
         ]);
 
-        $developerRole = Role::whereName('developer')->first();
-
-        if ($developerRole) {
+        if ($developerRole = Role::whereName('developer')->first()) {
             $developerRole->attachPermissions([$permission_develop_blog, $permission_manage_blog, $permission_admin_blog]);
         }
 
-        $adminRole = Role::whereName('admin')->first();
-
-        if ($adminRole) {
+        if ($adminRole = Role::whereName('admin')->first()) {
             $adminRole->attachPermissions([$permission_manage_blog, $permission_admin_blog]);
+        }
+
+        if ($superAdminRole = Role::whereName('super-admin')->first()) {
+            $superAdminRole->attachPermissions([$permission_manage_blog, $permission_admin_blog]);
         }
     }
 }
