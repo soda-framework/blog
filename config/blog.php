@@ -20,6 +20,7 @@ return [
     'field_params' => [
         'name'           => [],
         'featured_image' => [],
+        'excerpt'        => [],
         'content'        => [],
         'singletags'     => [],
     ],

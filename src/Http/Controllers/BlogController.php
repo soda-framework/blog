@@ -101,6 +101,7 @@ class BlogController extends Controller
 
         $post->fill($request->only([
             'name',
+            'excerpt',
             'status',
             'content',
         ]));

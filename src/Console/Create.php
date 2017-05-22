@@ -84,6 +84,17 @@ class Create extends Command
         ])->save();
 
         ApplicationSetting::withoutGlobalScope('in-application')->firstOrNew([
+            'field_name'     => 'blog_auto_excerpt',
+            'category'       => 'Blog',
+            'application_id' => $application->id,
+        ])->fill([
+            'name'        => 'Automatic excerpt',
+            'field_type'  => 'toggle',
+            'description' => 'If enabled, post excerpts will be generated automatically.',
+            'value'       => 1,
+        ])->save();
+
+        ApplicationSetting::withoutGlobalScope('in-application')->firstOrNew([
             'field_name'     => 'blog_rss_enabled',
             'category'       => 'Blog',
             'application_id' => $application->id,

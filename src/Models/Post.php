@@ -3,17 +3,17 @@
 namespace Soda\Blog\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Soda\Cms\Database\Models\User;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Soda\Blog\Models\Traits\BlogSortableTrait;
 use Soda\Blog\Models\Traits\BoundToBlog;
 use Soda\Cms\Database\Models\DynamicContent;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Soda\Cms\Database\Models\Traits\HasMedia;
-use Soda\Blog\Models\Traits\BlogSortableTrait;
 use Soda\Cms\Database\Models\Traits\Draftable;
+use Soda\Cms\Database\Models\Traits\HasMedia;
 use Soda\Cms\Database\Models\Traits\Sluggable;
+use Soda\Cms\Database\Models\User;
 
 class Post extends Model
 {
@@ -23,6 +23,7 @@ class Post extends Model
     public $fillable = [
         'name',
         'content',
+        'excerpt',
         'slug',
         'singletags',
         'blog_id',
@@ -173,7 +174,7 @@ class Post extends Model
     {
         $query = static::where('id', '!=', $this->id);
 
-        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '<=' : '>=', $this->$sortableField);
 
             break;
@@ -186,7 +187,7 @@ class Post extends Model
     {
         $query = static::reverseOrder()->where('id', '!=', $this->id);
 
-        foreach ((array) config('soda.blog.default_sort') as $sortableField => $direction) {
+        foreach ((array)config('soda.blog.default_sort') as $sortableField => $direction) {
             $query->where($sortableField, strtolower($direction) == 'DESC' ? '>=' : '<=', $this->$sortableField);
 
             break;
@@ -195,8 +196,21 @@ class Post extends Model
         return $query->first();
     }
 
+    public function getExcerptAttribute($value)
+    {
+        return $this->getExcerpt();
+    }
+
     public function getExcerpt($numCharacters = null, $type = 'words', $stripTags = true)
     {
+        $currentBlog = app('CurrentBlog');
+
+        // Return custom excerpt if auto excerpt is disabled
+        if ($currentBlog->getSetting('auto_excerpt') !== null && $currentBlog->getSetting('auto_excerpt') == 0) {
+
+            return isset($this->attributes['excerpt']) ? $this->attributes['excerpt'] : '';
+        }
+
         $excerpt = $this->content;
 
         // Remove HTML tags
@@ -247,7 +261,7 @@ class Post extends Model
         $propertiesModel->exists = true;
 
         foreach ($this->settings as $setting) {
-            if (! $setting->relationLoaded('field')) {
+            if (!$setting->relationLoaded('field')) {
                 $this->settings->load('field');
             }
 

@@ -66,6 +66,14 @@
                         'field_params' => config('soda.blog.field_params.featured_image'),
                     ])->setModel($post) !!}
 
+                    @if($blog->getSetting('auto_excerpt') !== null && $blog->getSetting('auto_excerpt') == 0)
+                        {!! app('soda.form')->textarea([
+                            'name'         => 'Excerpt',
+                            'field_name'   => 'excerpt',
+                            'field_params' => config('soda.blog.field_params.excerpt'),
+                        ])->setModel($post) !!}
+                    @endif
+
                     {!! app('soda.form')->tinymce([
                         'name'         => ucfirst(trans('soda-blog::general.post')) . ' body',
                         'field_name'   => 'content',
