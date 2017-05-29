@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterBlogPostsTable extends Migration
+class AddExcerptColumnToBlogPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AlterBlogPostsTable extends Migration
     public function up()
     {
         Schema::table('blog_posts', function (Blueprint $table) {
-            $table->mediumText('content')->nullable()->change();
+            $table->string('excerpt')->after('name')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AlterBlogPostsTable extends Migration
     public function down()
     {
         Schema::table('blog_posts', function (Blueprint $table) {
-            $table->mediumText('content')->change();
+            $table->dropColumn('excerpt');
         });
     }
 }

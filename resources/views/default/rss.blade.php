@@ -35,11 +35,17 @@ $lastUpdated = $posts->max('updated_at');
 
             @if($post->content)
                 @if($blog->getSetting('rss_strip_tags'))
-                    <content>{{ strip_tags($post->content) }}</content>
+                    <content>
+                        <![CDATA[
+                            {{ strip_tags($post->content) }}</content>
+                        ]]>
+                    </content>
                 @else
                     <content type="xhtml">
                         <div xmlns="http://www.w3.org/1999/xhtml">
-                            {{ $post->content }}
+                            <![CDATA[
+                                {{ $post->content }}
+                            ]]>
                         </div>
                     </content>
                 @endif
