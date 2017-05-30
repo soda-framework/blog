@@ -5,7 +5,7 @@
 
     @if($post->isPublished() || Session::get("soda.draft_mode") == true)
         <a class="btn btn-info btn-lg" href="{{ $post->getFullUrl() }}" target="_blank">
-            <span>View Post</span>
+            <span>View {{ ucfirst(trans('soda-blog::general.post')) }}</span>
         </a>
     @endif
 @stop
@@ -107,7 +107,7 @@
 
         @if($post->isPublished() || Session::get("soda.draft_mode") == true)
             <a class="btn btn-info btn-lg" href="{{ $post->getFullUrl() }}" target="_blank">
-                <span>View Post</span>
+                <span>View {{ ucfirst(trans('soda-blog::general.post')) }}</span>
             </a>
         @endif
     </div>
