@@ -3,6 +3,7 @@
 namespace Soda\Blog\Http\Controllers;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Soda\Blog\Models\Tag;
 use Soda\Blog\Models\Post;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class BlogController extends Controller
             $direction = 'desc';
         }
 
-        $posts = $this->currentBlog->posts()->whereNotNull('id')->withoutGlobalScope('published');
+        $posts = $this->blogPostQuery();
 
         if ($sort) {
             $posts = $posts->withoutGlobalScope('position')->orderBy($sort, $direction);
@@ -131,7 +132,7 @@ class BlogController extends Controller
             ])->getSaveValue($request);
         }
 
-        if (! $post->published_at) {
+        if (! $post->published_at && $status == 1) {
             $post->published_at = Carbon::now();
         }
 
@@ -220,5 +221,20 @@ class BlogController extends Controller
         }
 
         return $settings;
+    }
+
+    protected function blogPostQuery() {
+        $sortConfig = (array) config('soda.blog.default_sort');
+        $posts = $this->currentBlog->posts()->whereNotNull('id')->withoutGlobalScope('position')->withoutGlobalScope('published');
+
+        if(array_keys($sortConfig)[0] == 'published_at') {
+            $posts->orderByRaw('published_at IS NULL DESC');
+        }
+
+        foreach ($sortConfig as $field => $direction) {
+            $posts->orderBy($field, Post::isReversed() ? (strtolower($direction) == 'desc' ? 'ASC' : 'DESC') : $direction);
+        }
+
+        return $posts;
     }
 }
