@@ -105,7 +105,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($post->isPublished())
+                                @if($post->published_at)
                                     {{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.cms.publish_timezone', config('soda.blog.publish_timezone', 'UTC')))->toDayDateTimeString() : '' }}
                                 @else
                                     -
