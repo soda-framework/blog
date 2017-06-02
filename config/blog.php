@@ -6,7 +6,6 @@ return [
     'publish_timezone' => 'Australia/Sydney',
 
     'default_sort' => [
-        'position'     => 'ASC',
         'published_at' => 'DESC',
     ],
 

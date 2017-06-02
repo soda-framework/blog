@@ -1,3 +1,8 @@
+<?php
+    $blogPostOrder = array_keys(config('soda.blog.default_sort'))[0];
+    $blogPostsOrderable =  \Soda\Blog\Models\Post::getSortableField() == $blogPostOrder;
+?>
+
 @extends(soda_cms_view_path('layouts.inner'))
 
 @section('content-heading-button')
@@ -38,7 +43,7 @@
             <table class="table table-striped middle">
                 <thead>
                 <tr>
-                        @if(!Input::get('sort'))
+                        @if($blogPostsOrderable && !Input::get('sort'))
                         <th width="50">Sort</th>
                         @endif
                         <?php
@@ -81,7 +86,7 @@
                 <tbody class="sortable" data-entityname="soda-blog-post">
                 @foreach ($posts as $post)
                     <tr data-itemId="{{ $post->id }}">
-                            @if(!Input::get('sort'))
+                            @if($blogPostsOrderable && !Input::get('sort'))
                             <td class="sortable-handle text-center">
                                 <img src="/soda/cms/img/drag-dots.gif" />
                             </td>
@@ -101,7 +106,7 @@
                             </td>
                             <td>
                                 @if($post->isPublished())
-                                    {{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.blog.publish_timezone'))->toDayDateTimeString() : '' }}
+                                    {{ @$post->published_at ? @$post->published_at->setTimezone(config('soda.cms.publish_timezone', config('soda.blog.publish_timezone', 'UTC')))->toDayDateTimeString() : '' }}
                                 @else
                                     -
                                 @endif
