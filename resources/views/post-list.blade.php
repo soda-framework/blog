@@ -12,26 +12,31 @@
 @section('content')
     <div class="content-top">
         <div class='row'>
-            <form method='GET'>
-                <div class="col-md-6">
-                    <label for="field_search">Search</label>
-                    <div class="input-group">
-                        <input name="search" id="field_search" type="text" class="form-control field_search search" value="{{ Request::query('search') }}">
+            <form method='GET' class="form-inline">
 
+                <div class="col-xs-12 col-sm-10">
+                    <div class="form-group" style="width:100%">
+                        <div class="input-group input-group-lg" style="width:100%">
+                            <input type="text" name="search" class="form-control form-control-alt has-floating-addon" value="{{ Request::input('search') }}" placeholder="Search blog posts..." />
+                            <div class="input-group-floating-addon"><i class="mdi mdi-magnify"></i></div>
                         <span class="input-group-btn">
-                            <button class="btn btn-default"><span class='glyphicon glyphicon-search'></span></button>
+                            <button class="btn btn-default">Search</button>
                         </span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="field_filter_value">Status</label>
-                    <div>
-                        <select name="status" class="form-control" id="field_filter_value">
-                            <option value="" {{ Request::query('status') === "" ? "selected" : "" }}>All</option>
-                            <option value="1" {{ Request::query('status') == "1" ? "selected" : "" }}>Published</option>
-                            <option value="0" {{ Request::query('status') == "0" ? "selected" : "" }}>Draft</option>
-                            <option value="2" {{ Request::query('status') == "2" ? "selected" : "" }}>Pending publish</option>
-                        </select>
+
+                <div class="col-xs-12 col-sm-2">
+                    <div class="pull-right">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select name="status" class="form-control">
+                                <option value="" {{ Request::input('status') === "" ? "selected" : "" }}>All</option>
+                                <option value="1" {{ Request::input('status') == "1" ? "selected" : "" }}>Published</option>
+                                <option value="0" {{ Request::input('status') == "0" ? "selected" : "" }}>Draft</option>
+                                <option value="2" {{ Request::input('status') == "2" ? "selected" : "" }}>Pending publish</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </form><!-- /input-group -->
