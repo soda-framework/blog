@@ -132,16 +132,13 @@ class BlogController extends Controller
             ])->getSaveValue($request);
         }
 
-        if (! $post->published_at && $status == 1) {
+        if (! $post->published_at && $post->status == 1) {
             $post->published_at = Carbon::now();
         }
 
         if ($request->hasFile('featured_image')) {
             $post->featured_image = (new Uploader)->uploadFile($request->file('featured_image'), config('soda.blog.field_params.featured_image.intervention', []));
         }
-
-        // Save post to the database
-        $post->save();
 
         // Handle tags
         if ($request->has('singletags')) {
@@ -151,7 +148,12 @@ class BlogController extends Controller
             foreach ($request->input('singletags') as $tag) {
                 $tags->push(Tag::firstOrCreate(['name' => $tag]));
             }
+        }
 
+        // Save post to the database
+        $post->save();
+
+        if ($request->has('singletags')) {
             $post->tags()->sync($tags->pluck('id')->toArray());
         }
 

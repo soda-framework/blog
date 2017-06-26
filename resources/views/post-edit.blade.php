@@ -3,7 +3,7 @@
 @section('content-heading-button')
     @include(soda_cms_view_path('partials.buttons.save'), ['submits' => '#post-form'])
 
-    @if($post->isPublished() || Session::get("soda.draft_mode") == true)
+    @if($post->id && ($post->isPublished() || Session::get("soda.draft_mode") == true))
         <a class="btn btn-info btn-lg" href="{{ $post->getFullUrl() }}" target="_blank">
             <span>View {{ ucfirst(trans('soda-blog::general.post')) }}</span>
         </a>
@@ -105,7 +105,7 @@
     <div class="content-bottom">
         @include(soda_cms_view_path('partials.buttons.save'), ['submits' => '#post-form'])
 
-        @if($post->isPublished() || Session::get("soda.draft_mode") == true)
+        @if($post->id && ($post->isPublished() || Session::get("soda.draft_mode") == true))
             <a class="btn btn-info btn-lg" href="{{ $post->getFullUrl() }}" target="_blank">
                 <span>View {{ ucfirst(trans('soda-blog::general.post')) }}</span>
             </a>
