@@ -94,7 +94,7 @@ class Post extends Model
             GROUP BY bpt.post_id, p.name
             ORDER BY COUNT(post_id)'.($limit ? " LIMIT $limit" : "")));*/
 
-            $tagsTable = (new Tag)->getTable();
+        $tagsTable = (new Tag)->getTable();
         $postTable = (new self)->getTable();
 
         $related = Tag::select("$tagsTable.post_id", "$postTable.*", DB::raw("COUNT($tagsTable.post_id) as matched_tags"))
