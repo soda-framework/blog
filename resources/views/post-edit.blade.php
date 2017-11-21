@@ -106,6 +106,7 @@
                                 tinymce.baseURL = '/vendor/bootleg/cms/components/tinymce-builded/js/tinymce';
                                 tinymce.init({
                                     selector:'textarea.tinymce.content',
+                                    extended_valid_elements: 'script[language|type|src|async|defer|charset]',
                                     plugins: ["link", "code", "hr", "image", "table", "media", "uploadImage"],
                                     toolbar:"undo redo | styleselect | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image upload",
                                     relative_urls: false
