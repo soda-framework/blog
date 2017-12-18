@@ -31,6 +31,7 @@ if ($blog->id) {
 
             if ($blog->getSetting('rss_enabled') == true) {
                 Route::get($blog->getSetting('rss_slug'), 'FrontendController@rss')->name('soda.blog.rss')->middleware('web');
+                Route::get('instant-articles', 'FrontendController@instantArticles')->name('soda.blog.instant-articles')->middleware('web');
             }
         });
     }

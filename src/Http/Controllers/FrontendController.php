@@ -48,4 +48,17 @@ class FrontendController
             'posts' => $posts,
         ])->header('Content-Type', 'text/xml');
     }
+
+    public function instantArticles()
+    {
+        // Disable debugbar as it breaks the XML format
+        Config::set('debugbar.enabled', false);
+
+        $posts = $this->currentBlog->posts()->with('tags', 'author')->paginate(20);
+
+        return response()->view($this->currentBlog->instant_article_feed_view, [
+            'blog'  => $this->currentBlog,
+            'posts' => $posts,
+        ])->header('Content-Type', 'text/xml');
+    }
 }

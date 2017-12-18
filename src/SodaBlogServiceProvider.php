@@ -2,6 +2,8 @@
 
 namespace Soda\Blog;
 
+use Soda\Blog\InstantArticles\DefaultParser;
+use Soda\Blog\InstantArticles\InstantArticleParser;
 use Soda\Blog\Models\Blog;
 use Soda\Blog\Models\Post;
 use Soda\Blog\Console\Create;
@@ -89,6 +91,8 @@ class SodaBlogServiceProvider extends ServiceProvider
 
             return $application ? Blog::firstOrNew(['application_id' => $application->id]) : new Blog;
         });
+
+        $this->app->singleton(InstantArticleParser::class, DefaultParser::class);
     }
 
     /**

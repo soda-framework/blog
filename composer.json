@@ -13,7 +13,8 @@
   ],
   "require": {
     "soda-framework/cms": ">=0.7.0 <0.9.0",
-    "rutorika/sortable": "3.2.*"
+    "rutorika/sortable": "3.2.*",
+    "facebook/facebook-instant-articles-sdk-php": "^1.7"
   },
   "autoload": {
     "psr-4": {

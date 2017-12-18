@@ -159,6 +159,11 @@ class Post extends Model
         return $this->published_at ? $this->published_at : $this->created_at;
     }
 
+    public function getModifiedDateAttribute()
+    {
+        return $this->updated_at > $this->published_at ? $this->updated_at : $this->published_at;
+    }
+
     public function getFullUrl()
     {
         $currentBlog = app('CurrentBlog');
