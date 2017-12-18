@@ -2,13 +2,13 @@
 
 namespace Soda\Blog\InstantArticles;
 
+use Soda\Blog\Models\Post;
+use Facebook\InstantArticles\Elements\Time;
 use Facebook\InstantArticles\Elements\Author;
 use Facebook\InstantArticles\Elements\Footer;
 use Facebook\InstantArticles\Elements\Header;
 use Facebook\InstantArticles\Elements\InstantArticle;
-use Facebook\InstantArticles\Elements\Time;
 use Facebook\InstantArticles\Transformer\Transformer;
-use Soda\Blog\Models\Post;
 
 class DefaultParser extends AbstractInstantArticleParser implements InstantArticleParser
 {
@@ -41,7 +41,7 @@ class DefaultParser extends AbstractInstantArticleParser implements InstantArtic
 
     protected function footer(Post $post)
     {
-        return Footer::create()->withCredits('© ' . app('soda')->getApplication()->name);
+        return Footer::create()->withCredits('© '.app('soda')->getApplication()->name);
     }
 
     protected function transformContent(InstantArticle $article, $html)
