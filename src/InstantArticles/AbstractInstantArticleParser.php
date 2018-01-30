@@ -2,9 +2,9 @@
 
 namespace Soda\Blog\InstantArticles;
 
+use Soda\Blog\Models\Post;
 use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\InstantArticles\Transformer\Transformer;
-use Soda\Blog\Models\Post;
 
 abstract class AbstractInstantArticleParser implements InstantArticleParser
 {
@@ -44,7 +44,7 @@ abstract class AbstractInstantArticleParser implements InstantArticleParser
             } catch (\ReflectionException $e) {
                 $factoryMethod =
                     new \ReflectionMethod(
-                        'Facebook\\InstantArticles\\Transformer\\Rules\\' . $class,
+                        'Facebook\\InstantArticles\\Transformer\\Rules\\'.$class,
                         'createFrom'
                     );
             }

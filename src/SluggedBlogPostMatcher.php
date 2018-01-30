@@ -2,11 +2,10 @@
 
 namespace Soda\Blog;
 
-use Illuminate\Contracts\Routing\Registrar as RouterContract;
 use Illuminate\Http\Request;
-use Soda\Blog\InstantArticles\DefaultParser;
 use Soda\Blog\InstantArticles\InstantArticleParser;
 use Soda\Cms\Http\RequestMatcher\Matchers\MatcherInterface;
+use Illuminate\Contracts\Routing\Registrar as RouterContract;
 
 class SluggedBlogPostMatcher implements MatcherInterface
 {
@@ -27,7 +26,7 @@ class SluggedBlogPostMatcher implements MatcherInterface
     {
         $blogSlug = trim($this->currentBlog->getSetting('slug'), '/');
         $postSlug = trim($slug, '/');
-        $postSlug = '/' . trim(substr($postSlug, strlen($blogSlug), strlen($postSlug)), '/');
+        $postSlug = '/'.trim(substr($postSlug, strlen($blogSlug), strlen($postSlug)), '/');
 
         if (ends_with($postSlug, static::INSTANT_ARTICLE_SLUG)) {
             $this->isInstantArticle = true;
