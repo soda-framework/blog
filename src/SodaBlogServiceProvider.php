@@ -2,14 +2,14 @@
 
 namespace Soda\Blog;
 
-use Soda\Blog\InstantArticles\DefaultParser;
-use Soda\Blog\InstantArticles\InstantArticleParser;
 use Soda\Blog\Models\Blog;
 use Soda\Blog\Models\Post;
 use Soda\Blog\Console\Create;
 use Soda\Blog\Console\Install;
 use Illuminate\Support\Facades\Route;
+use Soda\Blog\InstantArticles\DefaultParser;
 use Soda\Cms\Support\Facades\SodaFacade as Soda;
+use Soda\Blog\InstantArticles\InstantArticleParser;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class SodaBlogServiceProvider extends ServiceProvider

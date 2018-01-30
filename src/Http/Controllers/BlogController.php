@@ -3,7 +3,6 @@
 namespace Soda\Blog\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Soda\Blog\Models\Tag;
 use Soda\Blog\Models\Post;
 use Illuminate\Http\Request;
@@ -225,11 +224,12 @@ class BlogController extends Controller
         return $settings;
     }
 
-    protected function blogPostQuery() {
+    protected function blogPostQuery()
+    {
         $sortConfig = (array) config('soda.blog.default_sort');
         $posts = $this->currentBlog->posts()->whereNotNull('id')->withoutGlobalScope('position')->withoutGlobalScope('published');
 
-        if(array_keys($sortConfig)[0] == 'published_at') {
+        if (array_keys($sortConfig)[0] == 'published_at') {
             $posts->orderByRaw('published_at IS NULL DESC');
         }
 
