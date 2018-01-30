@@ -249,7 +249,7 @@ class Post extends Model
 
     public function getPublishDate()
     {
-        return $this->published_at->setTimezone(config('soda.blog.publish_timezone'));
+        return $this->published_at ? $this->published_at->setTimezone(config('soda.blog.publish_timezone')) : Carbon::now();
     }
 
     public function isPublished()
