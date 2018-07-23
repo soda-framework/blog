@@ -12,7 +12,7 @@
     }
   ],
   "require": {
-    "soda-framework/cms": ">=0.7.0 <=0.10.*",
+    "soda-framework/cms": ">=0.7.0 <0.11.0",
     "rutorika/sortable": "3.2.*",
     "facebook/facebook-instant-articles-sdk-php": "^1.7"
   },
