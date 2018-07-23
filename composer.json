@@ -12,13 +12,22 @@
     }
   ],
   "require": {
-    "soda-framework/cms": "^0.4.59",
-    "rutorika/sortable": "3.2.*"
+    "soda-framework/cms": ">=0.7.0 <=0.10.0",
+    "rutorika/sortable": "3.2.*",
+    "facebook/facebook-instant-articles-sdk-php": "^1.7"
   },
   "autoload": {
     "psr-4": {
       "Soda\\Blog\\": "src/"
     }
   },
-  "minimum-stability": "stable"
+  "extra": {
+    "branch-alias": {
+      "dev-release/0.1": "0.1.x-dev",
+      "dev-release/0.2": "0.2.x-dev",
+      "dev-release/0.3": "0.3.x-dev",
+      "dev-master": "0.2.x-dev"
+    }
+  },
+  "minimum-stability": "dev"
 }

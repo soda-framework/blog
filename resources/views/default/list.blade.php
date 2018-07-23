@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-    This is the default {{ config('bootleg.blog.title_singular', 'blog') }} theme..:
-    {{$post->name}}
-    {{$post->getSetting('text')}}
+    @foreach(\Soda\Blog\Models\Post::all() as $post)
+        {{ $post }}
+    @endforeach
 @stop

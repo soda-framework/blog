@@ -14,8 +14,6 @@ class ImportController
 
     public function __construct()
     {
-        parent::__construct();
-
         set_time_limit(-1);
         ini_set('max_execution_time', 0);
         ini_set('default_socket_timeout', 900);
@@ -104,13 +102,6 @@ class ImportController
                             $images = $this->getElementsByTag($tumblrPost->body, 'img');
                             $post->featured_image = @$images->item(0)->getAttribute('src');
                         }
-
-                        // Get the first paragraph
-                        $paragraphs = $this->getElementsByTag(mb_convert_encoding($post->content, 'HTML-ENTITIES', 'UTF-8'), 'p');
-                        $firstParagraph = @$paragraphs->item(0)->nodeValue;
-
-                        // Strip down to first 30 words
-                        $post->excerpt = $this->fixEncoding(implode(' ', array_slice(explode(' ', $firstParagraph), 0, 30)));
 
                         echo 'Post saved: '.$post->slug.'<br />';
                         flush();

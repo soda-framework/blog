@@ -3,6 +3,7 @@
 namespace Soda\Blog\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Rutorika\Sortable\SortableTrait as BaseSortableTrait;
 
@@ -21,6 +22,8 @@ use Rutorika\Sortable\SortableTrait as BaseSortableTrait;
 trait BlogSortableTrait
 {
     use BaseSortableTrait;
+
+    protected static $reversed = false;
 
     /**
      * Adds position to model on creating event.
@@ -42,12 +45,29 @@ trait BlogSortableTrait
         );
 
         static::addGlobalScope('position', function (Builder $builder) {
-            $sortableFields = (array) config('soda-blog.default_sort');
+            $sortableFields = (array) config('soda.blog.default_sort');
 
             foreach ($sortableFields as $field => $direction) {
-                $builder->orderBy($field, $direction);
+                $builder->orderBy($field, static::isReversed() ? (strtolower($direction) == 'desc' ? 'ASC' : 'DESC') : $direction);
             }
         });
+    }
+
+    public static function reverseOrder()
+    {
+        static::$reversed = true;
+
+        return new static;
+    }
+
+    public static function normalOrder()
+    {
+        static::$reversed = false;
+    }
+
+    public static function isReversed()
+    {
+        return static::$reversed ? true : false;
     }
 
     /**

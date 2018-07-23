@@ -2,17 +2,14 @@
 
 namespace Soda\Blog\Models;
 
-use Soda\Cms\Models\Field;
+use Soda\Cms\Database\Models\Field;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostSetting extends Model
 {
-    use SoftDeletes;
-
     public $table = 'blog_post_settings';
     public $fillable = ['name', 'value', 'field_id'];
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at'];
 
     public function post()
     {
