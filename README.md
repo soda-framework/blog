@@ -20,8 +20,15 @@ Add package to providers in `/config/app.php`
 ]
 ```
 
-#### 3. Migrate & Seed
+#### 3. Install your blog
+`php artisan soda:blog:install`
 
-`php artisan soda:blog:migrate`
+#### 4. Create your blog 
+1. run `php artisan soda:blog:create`
+2. Select your application
+3. Give your blog a name
+4. Enter a slug for your blog (deafult: `/blog`)
+5. Enable/Disable RSS for your blog
 
-`php artisan soda:blog:seed`
+
+
